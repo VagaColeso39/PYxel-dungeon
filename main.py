@@ -15,8 +15,8 @@ GRAY = (110, 110, 111)
 
 def main():
     global SCREEN, CLOCK, level
-    multiplier = random.randint(50, 100)
-    chance_for_door = 50
+    multiplier = random.randint(50, 60)
+    chance_for_door = 100
     level = sprites.Level(multiplier, chance_for_door)
     block_size = 10
 
@@ -43,7 +43,7 @@ def drawGrid(blockSize: int = 20):
             elif level.dungeon.grid[x][y] == dungeonGenerator.FLOOR:
                 color = BROWN
             elif level.dungeon.grid[x][y] == dungeonGenerator.CORRIDOR:
-                color = SOFT_BROWN
+                color = BROWN
             elif level.dungeon.grid[x][y] == dungeonGenerator.DOOR:
                 color = LIGHT_BROWN
             elif level.dungeon.grid[x][y] == dungeonGenerator.WALL:
@@ -51,7 +51,8 @@ def drawGrid(blockSize: int = 20):
 
             cell = pygame.Rect(x * blockSize, y * blockSize, blockSize, blockSize)
             pygame.draw.rect(SCREEN, color, cell)
-            pygame.draw.rect(SCREEN,  GRAY, cell, 1)
+            if level.dungeon.grid[x][y] != dungeonGenerator.WALL:
+                pygame.draw.rect(SCREEN,  GRAY, cell, 1)
 
 
 if __name__ == "__main__":

@@ -516,19 +516,26 @@ class dungeonGenerator:
         unconnectedRooms = []
         for room in self.rooms:
             connections = []
+            doubledoors_flag = False
             for i in range(room.width):
-                if self.grid[room.x + i][room.y - 2] == FLOOR or self.grid[room.x + i][room.y - 2] == CORRIDOR:
+                if self.grid[room.x + i][room.y - 2] in [FLOOR, CORRIDOR] and not doubledoors_flag:
                     connections.append((room.x + i, room.y - 1))
-                if room.y + room.height + 1 < self.height and self.grid[room.x + i][room.y + room.height + 1] == CORRIDOR:
-                    connections.append((room.x + i, room.y + room.height))
+                    doubledoors_flag = True
+                elif self.grid[room.x + i][room.y - 2] == EMPTY:
+                    doubledoors_flag = False
+            doubledoors_flag = False
             for i in range(room.height):
-                if self.grid[room.x - 2][room.y + i] == CORRIDOR:
-                    connections.append((room.x - 1, room.y + i))
-                if room.x + room.width + 1 < self.width and self.grid[room.x + room.width + 1][room.y + i] in [CORRIDOR, FLOOR]:
+                if room.x + room.width + 1 < self.width and self.grid[room.x + room.width + 1][room.y + i] in [CORRIDOR, FLOOR] and not doubledoors_flag:
                     connections.append((room.x + room.width, room.y + i))
+                    doubledoors_flag = True
+                elif room.x + room.width + 1 < self.width and self.grid[room.x + room.width + 1][room.y + i] == EMPTY:
+                    doubledoors_flag = False
+
             if connections:
+                if room.room_type in ["treasure", "locked"]:
+                    extraDoorChance = 0
                 chance = -1
-                while chance <= extraDoorChance:
+                while chance < extraDoorChance:
                     pickAgain = True
                     while pickAgain:
                         x, y = choice(connections)

@@ -42,11 +42,12 @@ class dungeonRoom:
         height: the ammount of cells the room spans 
     """
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, room_type="usual"):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.room_type = room_type
 
 
 class dungeonGenerator:
@@ -346,7 +347,8 @@ class dungeonGenerator:
             self.rooms.append(dungeonRoom(startX, startY, roomWidth, roomHeight))
             return True
 
-    def placeRandomRooms(self, minRoomSize: object, maxRoomSize: object, roomStep: object = 1, margin: object = 1, attempts: object = 500) -> object:
+    def placeRandomRooms(self, minRoomSize: object, maxRoomSize: object, roomStep: object = 1, margin: object = 1,
+                         attempts: object = 500) -> object:
         """ 
         randomly places quads in the grid
         takes a brute force approach: randomly a generate quad in a random place -> check if fits -> reject if not
@@ -515,14 +517,14 @@ class dungeonGenerator:
         for room in self.rooms:
             connections = []
             for i in range(room.width):
-                if self.grid[room.x + i][room.y - 2]:
+                if self.grid[room.x + i][room.y - 2] == FLOOR or self.grid[room.x + i][room.y - 2] == CORRIDOR:
                     connections.append((room.x + i, room.y - 1))
-                if room.y + room.height + 1 < self.height and self.grid[room.x + i][room.y + room.height + 1]:
+                if room.y + room.height + 1 < self.height and self.grid[room.x + i][room.y + room.height + 1] == CORRIDOR:
                     connections.append((room.x + i, room.y + room.height))
             for i in range(room.height):
-                if self.grid[room.x - 2][room.y + i]:
+                if self.grid[room.x - 2][room.y + i] == CORRIDOR:
                     connections.append((room.x - 1, room.y + i))
-                if room.x + room.width + 1 < self.width and self.grid[room.x + room.width + 1][room.y + i]:
+                if room.x + room.width + 1 < self.width and self.grid[room.x + room.width + 1][room.y + i] in [CORRIDOR, FLOOR]:
                     connections.append((room.x + room.width, room.y + i))
             if connections:
                 chance = -1
@@ -592,7 +594,8 @@ class dungeonGenerator:
             none
         """
         for x, y in self.corridors:
-            if self.grid[x][y] < WALL: break
+            if self.grid[x][y] < WALL:
+                break
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[x][y] not in [WALL, EMPTY, OBSTACLE]:

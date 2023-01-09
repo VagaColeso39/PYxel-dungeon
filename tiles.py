@@ -1,7 +1,10 @@
+import pygame
 from typing import Literal
 
-class Tile:
-    def __init__(self, x, y, type: Literal['floor', 'wall', 'void', 'door']):
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'void', 'door']):
+        super().__init__(self)
+        self.dungeon = dungeon
         self.x = x
         self.y = y
         self.type = type
@@ -12,10 +15,12 @@ class Tile:
 
 
 class FloorTile(Tile):
-    def __init__(self, x, y, inventory=[], modificator=None, trap=None):
-        super().__init__(x, y, type='floor')
+    def __init__(self, dungeon, x, y, inventory=[], modificator=None, trap=None):
+        super().__init__(dungeon, x, y, type='floor')
+        self.image = pygame.image.load('/sprites/simple_floor.jpg').convert_alpha()
+        self.rect = self.image.get_rect()
         self.inventory = inventory
-        self.modificator = modificator  # can be high_grass, low_grass, coals, wooden_floor, water, trap, ladder_up, ladder_down
+        self.modificator = modificator  # can be high_grass, low_grass, coals, wooden_floor, water, trap
         if modificator == 'trap':
             self.trap = trap
         self.effects = []
@@ -43,16 +48,16 @@ class FloorTile(Tile):
 
 
 class WallTile(Tile):
-    def __init__(self, x, y):
-        super().__init__(x, y, type='wall')
+    def __init__(self, dungeon, x, y):
+        super().__init__(dungeon, x, y, type='wall')
         self.can_step = False
         self.gases = False
         self.fire = False
 
 
 class VoidTile(Tile):
-    def __init__(self, x, y):
-        super().__init__(x, y, type='void')
+    def __init__(self, dungeon, x, y):
+        super().__init__(dungeon, x, y, type='void')
         self.fire = False
         self.effects = []
     
@@ -70,8 +75,8 @@ class VoidTile(Tile):
 
 
 class DoorTile(Tile):
-    def __init__(self, x, y, modificator=None):
-        super().__init__(x, y, type='door')
+    def __init__(self, dungeon, x, y, modificator=None):
+        super().__init__(dungeon, x, y, type='door')
         self.modificator = modificator  # can be hided, locked or special (to burn it)
         self.opened = False
         self.gases &= self.opened  # link to `opened` because they must have same values

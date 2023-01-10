@@ -29,3 +29,5 @@ class Player:
     def hit_hero(self, damage):
         self.hp -= damage
     
+    def pick_up(self, item):
+        return self.backpack.pick_up(item)

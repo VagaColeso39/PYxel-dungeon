@@ -7,6 +7,12 @@ class Backpack:
         self.capacity = capacity
         self.allowed_items = allowed_items  # to allow item create tuple with it's class or parent class
     
+    def __str__(self) -> str:
+        return f'Backpack: {self.items}'
+    
+    def __repr__(self) -> str:
+        return self.__str__()
+    
     def can_hold(self, item):
         if isinstance(item, Backpack) or (len(self.items) < self.capacity and isinstance(item, self.allowed_items)):
             return True
@@ -27,7 +33,7 @@ class Backpack:
     
     def pick_up(self, item):
         if not self.put_to_others(item) and self.can_hold(item):
-            if item.stackable:
+            if item.stackable and self.get_item(item) is not None:
                 self.get_item(item).stack(item)
             else:
                 self.items.append(item)
@@ -35,7 +41,9 @@ class Backpack:
         return False
 
     def get_item(self, item):
-        return self.items[self.items.index(item)]
+        for i in self.items:
+            if i == item:
+                return i
     
     def set_quantity(self, item, quantity):
         self.get_item(item).quantity = quantity

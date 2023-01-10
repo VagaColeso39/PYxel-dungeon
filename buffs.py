@@ -16,6 +16,7 @@ class Effect:
     def next_move(self):
         self.end()
 
+
 class ActiveEffect(Effect):
     def __init__(self, target, duration=0):
         super().__init__(target, duration)
@@ -23,6 +24,7 @@ class ActiveEffect(Effect):
     def next_move(self):
         ...
         self.end()
+
 
 class PassiveEffect(Effect):
     def __init__(self, target, duration=0):
@@ -43,11 +45,10 @@ class PassiveEffect(Effect):
             self.target.del_buff(self.name)
 
 
-
 class Burning(ActiveEffect):
     def __init__(self, target, duration=6):
         super().__init__(target, duration)
 
     def next_turn(self):
-        self.target.hit(random.randint(self.target.max_hp//15, self.target.max_hp//6))
+        self.target.hit(random.randint(self.target.max_hp//15, self.target.max_hp//10))
         self.end()

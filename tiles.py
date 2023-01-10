@@ -1,6 +1,7 @@
 import pygame
 from typing import Literal
 
+
 class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'void', 'door']):
         super().__init__(self)
@@ -15,8 +16,10 @@ class Tile(pygame.sprite.Sprite):
 
 
 class FloorTile(Tile):
-    def __init__(self, dungeon, x, y, inventory=[], modificator=None, trap=None):
+    def __init__(self, dungeon, x, y, inventory=None, modificator=None, trap=None):
         super().__init__(dungeon, x, y, type='floor')
+        if inventory is None:
+            inventory = []
         self.image = pygame.image.load('/sprites/simple_floor.jpg').convert_alpha()
         self.rect = self.image.get_rect()
         self.inventory = inventory
@@ -29,7 +32,7 @@ class FloorTile(Tile):
         if effect not in self.effects:
             self.effects.append(effect)
         else:
-            raise ValueError('This effect already exists')
+            raise ValueError('This effect already exists') # update duration of effect ex: fire
     
     def del_effect(self, effect):
         self.effects.pop(self.effects.index(effect))
@@ -86,7 +89,7 @@ class DoorTile(Tile):
         if effect not in self.efects:
             self.effects.append(effect)
         else:
-            raise ValueError('This effect already exists')
+            raise ValueError('This effect already exists')  # same, need to update effect duration
     
     def del_effect(self, effect):
         self.effects.pop(self.effects.index(effect))

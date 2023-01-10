@@ -1,5 +1,5 @@
 class Item:
-    def __init__(self, name:str, quantity:int=1, stackable:bool=False, level:int=0, cursed:bool=False, cursed_known:bool=False, known:bool=False, unique:bool=False):
+    def __init__(self, name:str, quantity:int=1, stackable:bool=False, level:int=0, cursed:bool=False, cursed_known:bool=False, known:bool=False, essential:bool=False):
         self.name = name
         self.quantity = quantity
         self.stackable = stackable
@@ -7,8 +7,7 @@ class Item:
         self.cursed = cursed
         self.cursed_known = cursed_known
         self.known = known  # is item indentified
-        self.unique = unique  # don't know why it is here, but in original code this exist
-        self.actions = []
+        self.essential = essential  # don't know why it is here, but in original code this exist
 
     def __str__(self) -> str:
         return f'{self.name} x{self.quantity}'

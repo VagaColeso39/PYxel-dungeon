@@ -20,7 +20,6 @@ class Player(pygame.sprite.Sprite):
 
         self.hp = hp
         self.inventory = []
-        self.effects = []
         self.weapon = weapon
         self.armor = armor
         self.rings = rings

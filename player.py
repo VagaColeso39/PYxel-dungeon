@@ -19,6 +19,7 @@ class Player:
         self.accuracy = 10
         self.evasion = 5
         self.turns_to_hunger = 100
+        self.effects = []  # fire, poison, slime
         self.buffs = []
         self.turns_of_regeneration = 10
         self.turns_to_regeneration = 10

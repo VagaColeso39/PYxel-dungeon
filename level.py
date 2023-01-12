@@ -42,12 +42,5 @@ class Level:
         self.dungeon.connectAllRooms(chance_for_door)
         self.dungeon.placeWalls()
 
-        def next_move(self, action):
-            pass
-
-        # self.dungeon.constructNavGraph()
-        # for i, first_room in enumerate(self.dungeon.rooms):
-        #     for second_room in self.dungeon.rooms[i+1:]:
-        #         path_len = len(self.dungeon.findPath(first_room.x, first_room.y, second_room.x, second_room.y))
-        #         if path_len >= self.level_width // 4:
-        #             do something. Teleport mechanic?
+    def next_move(self, action):
+        pass

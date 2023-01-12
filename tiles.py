@@ -1,10 +1,10 @@
 import pygame
 from typing import Literal
+tile_sprites = pygame.sprite.Group()
 
 
-class Tile(pygame.sprite.Sprite):
+class Tile:
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'void', 'door']):
-        super().__init__(self)
         self.dungeon = dungeon
         self.x = x
         self.y = y
@@ -20,7 +20,7 @@ class FloorTile(Tile):
         super().__init__(dungeon, x, y, type='floor')
         if inventory is None:
             inventory = []
-        self.image = pygame.image.load('/sprites/simple_floor.jpg').convert_alpha()
+        self.image = pygame.image.load('sprites/simple_floor.jpg')
         self.rect = self.image.get_rect()
         self.inventory = inventory
         self.modificator = modificator  # can be high_grass, low_grass, coals, wooden_floor, water, trap

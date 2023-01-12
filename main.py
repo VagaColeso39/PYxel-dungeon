@@ -13,7 +13,7 @@ BROWN = (205, 120, 34)
 LIGHT_BROWN = (243, 163, 83)
 SOFT_BROWN = (126, 109, 91)
 GRAY = (110, 110, 111)
-
+SCREEN = None
 
 def main():
     global SCREEN, CLOCK

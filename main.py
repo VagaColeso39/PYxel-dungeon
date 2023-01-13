@@ -6,6 +6,7 @@ import pygame
 import dungeonGenerator
 import sprites
 from level import Level
+from tiles import WallTile, DoorTile, VoidTile, FloorTile
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
@@ -42,20 +43,20 @@ def drawGrid(level:Level, blockSize: int = 20):
     for x in range(0, level.level_width):
         for y in range(0, level.level_height):
             color = WHITE
-            if level.dungeon.grid[x][y] == dungeonGenerator.EMPTY:
+            if level.dungeon.grid[x][y].type == 'void':
                 pass  # empty cell
-            elif level.dungeon.grid[x][y] == dungeonGenerator.FLOOR:
+            elif level.dungeon.grid[x][y].type == 'floor':
                 color = BROWN
-            elif level.dungeon.grid[x][y] == dungeonGenerator.CORRIDOR:
+            elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
                 color = BROWN
-            elif level.dungeon.grid[x][y] == dungeonGenerator.DOOR:
+            elif level.dungeon.grid[x][y].type == 'door':
                 color = LIGHT_BROWN
-            elif level.dungeon.grid[x][y] == dungeonGenerator.WALL:
+            elif level.dungeon.grid[x][y].type == 'wall':
                 color = BLACK
 
             cell = pygame.Rect(x * blockSize, y * blockSize, blockSize, blockSize)
             pygame.draw.rect(SCREEN, color, cell)
-            if level.dungeon.grid[x][y] != dungeonGenerator.WALL:
+            if level.dungeon.grid[x][y].type != 'wall':
                 pygame.draw.rect(SCREEN, GRAY, cell, 1)
 
 

@@ -244,7 +244,7 @@ class dungeonGenerator:
             x, y = toFill.pop()
             if tilesToFill and grid[x][y] not in tilesToFill:
                 continue
-            if grid[x][y].type != 'void':
+            if grid[x][y] != 'x' and grid[x][y].type != 'void':
                 continue
             grid[x][y] = fillWith
             for nx, ny in self.findNeighboursDirect(x, y):

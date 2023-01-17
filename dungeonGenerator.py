@@ -244,7 +244,7 @@ class dungeonGenerator:
             x, y = toFill.pop()
             if tilesToFill and grid[x][y] not in tilesToFill:
                 continue
-            if grid[x][y] != 'x' and grid[x][y].type != 'void':
+            if grid[x][y] not in ['x']:
                 continue
             grid[x][y] = fillWith
             for nx, ny in self.findNeighboursDirect(x, y):
@@ -294,11 +294,13 @@ class dungeonGenerator:
 
         unconnectedAreas = []
         areaCount = 0
-        gridCopy = [[VoidTile('f1', x, y) for x in range(self.width)] for y in range(self.height)]
+        gridCopy = [[EMPTY for x in range(self.width)] for y in range(self.height)]
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[x][y].type != 'void':
                     gridCopy[x][y] = 'x'
+        if 'x' in gridCopy:
+            print(gridCopy.count('x'))
         for x in range(self.width):
             for y in range(self.height):
                 if gridCopy[x][y] == 'x':
@@ -307,7 +309,7 @@ class dungeonGenerator:
                     self.floodFill(x, y, areaCount, None, gridCopy)
         for x in range(self.width):
             for y in range(self.height):
-                if type(gridCopy[x][y]) != VoidTile:
+                if gridCopy[x][y] != 'x':
                     i = gridCopy[x][y]
                     unconnectedAreas[i - 1].append((x, y))
         return unconnectedAreas
@@ -465,17 +467,15 @@ class dungeonGenerator:
                 for x, y in area:
                     for xi, yi in toConnect:
                         distance = abs(x - xi) + abs(y - yi)
-                        if distance < bestDistance and (x == xi or y == yi):
+                        if distance < bestDistance:
                             bestDistance = distance
                             c[0] = (x, y)
                             c[1] = (xi, yi)
             c.sort()
             x, y = c[0]
-            for x in range(c[0][0] + 1, c[1][0]):
-                if self.grid[x][y].type == 'void':
-                    self.grid[x][y] = FloorTile('f1', x, y)
-            for y in range(c[0][1] + 1, c[1][1]):
-                if self.grid[x][y].type == 'void':
-                    self.grid[x][y] = FloorTile('f1', x, y)
+            for x in range(c[0][0] + 1, c[1][0] + 1):
+                self.grid[x][y] = FloorTile('f1', x, y)
+            for y in range(c[0][1] + 1, c[1][1] + 1):
+                self.grid[x][y] = FloorTile('f1', x, y)
             self.corridors.append((x, y))
 

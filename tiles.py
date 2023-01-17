@@ -5,6 +5,8 @@ tile_sprites = pygame.sprite.Group()
 
 class Tile:
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'void', 'door']):
+        self.explored = False
+        self.visible = False
         self.dungeon = dungeon
         self.x = x
         self.y = y

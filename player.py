@@ -1,11 +1,12 @@
 import bags
+from util import *
 from tiles import Tile
 
 class Player:
     def __init__(self, start_pos: list[int, int]):
         self.pos = start_pos
         self.backpack = bags.Backpack(self)
-        self.vision_field = 5
+        self.vision_field = 9
         self.bags = []
         self.weapon = None
         self.armor = None
@@ -37,7 +38,7 @@ class Player:
         return self.backpack.pick_up(item)
 
     def is_visible(self, grid:list, cell:Tile):
-        x = min(self.pos[0], cell.x)
+        '''x = min(self.x, cell.x)
         xi = self.pos[0] + cell.x - x
         y = min(self.pos[1], cell.y)
         yi = self.pos[1] + cell.y - y
@@ -48,4 +49,7 @@ class Player:
             for j in range(y, yi + 1):
                 if grid[x][y].type == 'wall':
                     return False
+        return True'''
+        if manhattan((self.pos[0], self.pos[1]), (cell.x, cell.y)) > self.vision_field:
+            return False
         return True

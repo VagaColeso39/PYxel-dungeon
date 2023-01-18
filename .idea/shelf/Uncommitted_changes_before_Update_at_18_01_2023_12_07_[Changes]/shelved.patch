@@ -1,0 +1,102 @@
+Index: level.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import dungeonGenerator\r\nimport random\r\n\r\n\r\nclass Level:\r\n    def room_creator(self):\r\n        creator_counter = 0\r\n        error_counter = 0\r\n        while creator_counter < self.room_amount:\r\n            if self.dungeon.placeRandomRooms(4, 9, 1, 1, 1):\r\n                creator_counter += 1\r\n                error_counter = 0\r\n            else:\r\n                error_counter += 1\r\n            if error_counter >= 100000:\r\n                print(f\"Cant generate room! {creator_counter} from {self.room_amount} of rooms is generated\")\r\n                self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width)\r\n                self.room_creator()\r\n\r\n    def __init__(self, multiplier, chance_for_door, num, mod=None, start_pos: list[int, int] = None):\r\n        self.multiplier = multiplier\r\n        self.chance_for_door = chance_for_door\r\n        self.num = num\r\n        self.mod = mod\r\n        self.start_pos = start_pos\r\n        self.board = None\r\n\r\n        self.level_width = int(6.4 * self.multiplier / 10)\r\n        self.level_height = int(6.4 * self.multiplier / 10)\r\n        self.room_amount = int(2.2 * self.multiplier / 10)\r\n\r\n        self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width)\r\n        self.room_creator()\r\n\r\n        self.dungeon.rooms[-1].room_type = \"treasure\"\r\n        self.closed_rooms_amount = random.randint(1, 2)\r\n        for i in range(1, self.closed_rooms_amount + 1):\r\n            self.dungeon.rooms[-1 - i].room_type = \"closed\"\r\n\r\n        self.dungeon.connectAllRooms(chance_for_door)\r\n        unconnected_areas = self.dungeon.findUnconnectedAreas()\r\n        self.dungeon.joinUnconnectedAreas(unconnected_areas)\r\n        self.dungeon.connectAllRooms(chance_for_door)\r\n#        self.dungeon.placeWalls()\r\n\r\n        self.start_room = self.dungeon.rooms[0]\r\n        self.start_pos = [self.start_room.x + self.start_room.width // 2, self.start_room.y + self.start_room.height // 2]\r\n\r\n    def next_move(self, action):\r\n        pass\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/level.py b/level.py
+--- a/level.py	(revision 2d69b3f8ef560d2eed8538a4ae466fc1dcb9663f)
++++ b/level.py	(date 1673968637361)
+@@ -41,7 +41,7 @@
+         unconnected_areas = self.dungeon.findUnconnectedAreas()
+         self.dungeon.joinUnconnectedAreas(unconnected_areas)
+         self.dungeon.connectAllRooms(chance_for_door)
+-#        self.dungeon.placeWalls()
++        self.dungeon.placeWalls()
+ 
+         self.start_room = self.dungeon.rooms[0]
+         self.start_pos = [self.start_room.x + self.start_room.width // 2, self.start_room.y + self.start_room.height // 2]
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import random\r\nimport sys\r\nimport pygame\r\nimport dungeonGenerator\r\nfrom player import Player\r\nfrom level import Level\r\nfrom tiles import WallTile, DoorTile, VoidTile, FloorTile\r\n\r\nBLACK = (0, 0, 0)\r\nWHITE = (200, 200, 200)\r\nWHITE_FADED = (180, 180, 180)\r\nBROWN = (205, 120, 34)\r\nBROWN_FADED = (175, 90, 4)\r\nLIGHT_BROWN = (243, 163, 83)\r\nLIGHT_BROWN_FADED = (213, 133, 53)\r\nSOFT_BROWN = (126, 109, 91)\r\nSOFT_BROWN_FADED = (96, 79, 61)\r\nGRAY = (110, 110, 111)\r\nGRAY_FADED = (80, 80, 81)\r\nRED = (255, 0, 0)\r\nSCREEN = None\r\n\r\ndef main():\r\n    global SCREEN, CLOCK\r\n    multiplier = random.randint(50, 60)\r\n    chance_for_door = 100\r\n    block_size = 10\r\n    level = Level(multiplier, chance_for_door, 1)\r\n\r\n    pygame.init()\r\n    SCREEN = pygame.display.set_mode((level.level_width * block_size, level.level_height * block_size))\r\n    CLOCK = pygame.time.Clock()\r\n    SCREEN.fill(BLACK)\r\n\r\n    player = Player(start_pos=level.start_pos)\r\n    player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}\r\n    player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}\r\n    print(player.pos)\r\n    while True:\r\n        drawGrid(player, level, block_size)\r\n        for event in pygame.event.get():\r\n            if event.type == pygame.QUIT:\r\n                pygame.quit()\r\n                sys.exit()\r\n            elif event.type == pygame.KEYDOWN:\r\n                if event.key == pygame.K_UP:\r\n                    player.pos[1] -= 1\r\n                elif event.key == pygame.K_DOWN:\r\n                    player.pos[1] += 1\r\n                elif event.key == pygame.K_LEFT:\r\n                    player.pos[0] -= 1\r\n                elif event.key == pygame.K_RIGHT:\r\n                    player.pos[0] += 1\r\n\r\n        pygame.display.update()\r\n\r\n\r\ndef drawGrid(player:Player, level:Level, blockSize: int = 20):\r\n    for x in range(0, level.level_width):\r\n        for y in range(0, level.level_height):\r\n            color = WHITE\r\n            if player.is_visible(level.dungeon.grid, level.dungeon.grid[x][y]):\r\n                level.dungeon.grid[x][y].visible = True\r\n                if level.dungeon.grid[x][y].type == 'void':\r\n                    pass  # empty cell\r\n                elif level.dungeon.grid[x][y].type == 'floor':\r\n                    color = BROWN\r\n                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work\r\n                    color = BROWN\r\n                elif level.dungeon.grid[x][y].type == 'door':\r\n                    color = LIGHT_BROWN\r\n                elif level.dungeon.grid[x][y].type == 'wall':\r\n                    color = BLACK\r\n\r\n            elif level.dungeon.grid[x][y].visible:\r\n                level.dungeon.grid[x][y].explored = True\r\n                level.dungeon.grid[x][y].visible = False\r\n\r\n                if level.dungeon.grid[x][y].type == 'void':\r\n                    pass  # empty cell\r\n                elif level.dungeon.grid[x][y].type == 'floor':\r\n                    color = BROWN_FADED\r\n                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work\r\n                    color = BROWN_FADED\r\n                elif level.dungeon.grid[x][y].type == 'door':\r\n                    color = LIGHT_BROWN_FADED\r\n                elif level.dungeon.grid[x][y].type == 'wall':\r\n                    color = BLACK\r\n            else:\r\n                color = BLACK\r\n\r\n            if player.pos[0] == x and player.pos[1] == y:\r\n                color = RED\r\n\r\n            cell = pygame.Rect(x * blockSize, y * blockSize, blockSize, blockSize)\r\n            pygame.draw.rect(SCREEN, color, cell)\r\n            if color not in [BLACK, RED]:\r\n                pygame.draw.rect(SCREEN, GRAY, cell, 1)\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    main()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 2d69b3f8ef560d2eed8538a4ae466fc1dcb9663f)
++++ b/main.py	(date 1673968811316)
+@@ -61,11 +61,7 @@
+             color = WHITE
+             if player.is_visible(level.dungeon.grid, level.dungeon.grid[x][y]):
+                 level.dungeon.grid[x][y].visible = True
+-                if level.dungeon.grid[x][y].type == 'void':
+-                    pass  # empty cell
+-                elif level.dungeon.grid[x][y].type == 'floor':
+-                    color = BROWN
+-                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
++                if level.dungeon.grid[x][y].type == 'floor':
+                     color = BROWN
+                 elif level.dungeon.grid[x][y].type == 'door':
+                     color = LIGHT_BROWN
+@@ -76,11 +72,7 @@
+                 level.dungeon.grid[x][y].explored = True
+                 level.dungeon.grid[x][y].visible = False
+ 
+-                if level.dungeon.grid[x][y].type == 'void':
+-                    pass  # empty cell
+-                elif level.dungeon.grid[x][y].type == 'floor':
+-                    color = BROWN_FADED
+-                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
++                if level.dungeon.grid[x][y].type == 'floor':
+                     color = BROWN_FADED
+                 elif level.dungeon.grid[x][y].type == 'door':
+                     color = LIGHT_BROWN_FADED
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"680103c4-d90c-44eb-83e1-e46b8782db9a\" name=\"Changes\" comment=\"bug in connecting rooms after tiles change\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/dungeonGenerator.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/dungeonGenerator.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/level.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/level.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/main.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/main.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/player.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/player.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/tiles.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/tiles.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2K8FzRcgDkh3fIXwU9iQi2r3vJw\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"last_opened_file_path\" value=\"$USER_HOME$/PycharmProjects/minecraft_chekerBot\" />\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Python.main\">\r\n    <configuration name=\"dungeonGenerator\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"PYxel-dungeon\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/dungeonGenerator.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"main\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"PYxel-dungeon\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"C:\\Users\\Misha\\PycharmProjects\\proj1\\venv\\Scripts\\python.exe\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/main.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"tiles\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"PYxel-dungeon\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/tiles.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.main\" />\r\n        <item itemvalue=\"Python.dungeonGenerator\" />\r\n        <item itemvalue=\"Python.tiles\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"680103c4-d90c-44eb-83e1-e46b8782db9a\" name=\"Changes\" comment=\"\" />\r\n      <created>1673348565415</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1673348565415</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"generating bug in floodFill\">\r\n      <created>1673526146743</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1673526146743</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"bug in connecting rooms after tiles change\">\r\n      <created>1673623050076</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1673623050076</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"generating bug in floodFill\" />\r\n    <MESSAGE value=\"bug in connecting rooms after tiles change\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"bug in connecting rooms after tiles change\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 2d69b3f8ef560d2eed8538a4ae466fc1dcb9663f)
++++ b/.idea/workspace.xml	(date 1673968729394)
+@@ -3,11 +3,8 @@
+   <component name="ChangeListManager">
+     <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="bug in connecting rooms after tiles change">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/dungeonGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/dungeonGenerator.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/level.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/tiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/tiles.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -29,7 +26,7 @@
+   <component name="PropertiesComponent">
+     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/minecraft_chekerBot" />
++    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+   </component>
+   <component name="RunManager" selected="Python.main">
+     <configuration name="dungeonGenerator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+@@ -126,7 +123,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1673623050076</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="bug in connecting rooms after tiles change">
++      <created>1673968064229</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1673968064229</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">

@@ -43,7 +43,7 @@ class Level:
         self.dungeon.joinUnconnectedAreas(unconnected_areas)
         self.dungeon.connectAllRooms(chance_for_door)
         '''
-#        self.dungeon.placeWalls()
+        self.dungeon.placeWalls()
 
         self.start_room = self.dungeon.rooms[0]
         self.start_pos = [self.start_room.x + self.start_room.width // 2, self.start_room.y + self.start_room.height // 2]

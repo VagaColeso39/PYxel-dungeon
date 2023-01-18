@@ -18,7 +18,6 @@ SOFT_BROWN_FADED = (96, 79, 61)
 GRAY = (110, 110, 111)
 GRAY_FADED = (80, 80, 81)
 RED = (255, 0, 0)
-GREEN = (0, 255, 0)
 SCREEN = None
 
 def main():
@@ -37,10 +36,6 @@ def main():
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
     print(player.pos)
-    for y in range(level.level_height):
-        for x in range(level.level_width):
-            if level.dungeon.grid[x][y].type == 'void':
-                level.dungeon.grid[x][y].type = 'wall'
     while True:
         drawGrid(player, level, block_size)
         for event in pygame.event.get():
@@ -61,19 +56,21 @@ def main():
 
 
 def drawGrid(player:Player, level:Level, blockSize: int = 20):
-    for y in range(0, level.level_width):
-        for x in range(0, level.level_height):
+    for x in range(0, level.level_width):
+        for y in range(0, level.level_height):
             color = WHITE
             if player.is_visible(level.dungeon.grid, level.dungeon.grid[x][y]):
                 level.dungeon.grid[x][y].visible = True
                 if level.dungeon.grid[x][y].type == 'void':
-                    pass
+                    pass  # empty cell
                 elif level.dungeon.grid[x][y].type == 'floor':
+                    color = BROWN
+                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
                     color = BROWN
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = WHITE
+                    color = BLACK
 
             elif level.dungeon.grid[x][y].visible:
                 level.dungeon.grid[x][y].explored = True
@@ -83,10 +80,12 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                     pass  # empty cell
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN_FADED
+                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
+                    color = BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = WHITE
+                    color = BLACK
             else:
                 color = BLACK
 

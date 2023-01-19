@@ -37,10 +37,6 @@ def main():
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
     print(player.pos)
-    for y in range(level.level_height):
-        for x in range(level.level_width):
-            if level.dungeon.grid[x][y].type == 'void':
-                level.dungeon.grid[x][y].type = 'wall'
     while True:
         drawGrid(player, level, block_size)
         for event in pygame.event.get():

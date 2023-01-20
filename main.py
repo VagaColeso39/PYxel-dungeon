@@ -89,7 +89,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 level.dungeon.grid[x][y].visible = False
 
                 if level.dungeon.grid[x][y].type == 'earth':
-                    color = LIGHT_BROWN
+                    color = LIGHT_BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work

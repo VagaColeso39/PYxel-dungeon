@@ -6,7 +6,7 @@ class Player:
     def __init__(self, start_pos: list[int, int]):
         self.pos = start_pos
         self.backpack = bags.Backpack(self)
-        self.vision_field = 9
+        self.vision_field = 10
         self.bags = []
         self.weapon = None
         self.armor = None
@@ -50,6 +50,6 @@ class Player:
                 if grid[x][y].type == 'wall':
                     return False
         return True'''
-        if manhattan((self.pos[0], self.pos[1]), (cell.x, cell.y)) > self.vision_field:
+        if pifagor((self.pos[0], self.pos[1]), (cell.x, cell.y)) > self.vision_field:
             return False
         return True

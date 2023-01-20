@@ -8,11 +8,11 @@ from tiles import WallTile, DoorTile, VoidTile, FloorTile
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
-WHITE_FADED = (180, 180, 180)
+WHITE_FADED = (160, 160, 160)
 BROWN = (205, 120, 34)
 BROWN_FADED = (175, 90, 4)
 LIGHT_BROWN = (243, 163, 83)
-LIGHT_BROWN_FADED = (213, 133, 53)
+LIGHT_BROWN_FADED = (200, 120, 40)
 SOFT_BROWN = (126, 109, 91)
 SOFT_BROWN_FADED = (96, 79, 61)
 GRAY = (110, 110, 111)
@@ -72,7 +72,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'wall':
                     color = WHITE
 
-            elif level.dungeon.grid[x][y].visible:
+            elif level.dungeon.grid[x][y].visible or level.dungeon.grid[x][y].explored:
                 level.dungeon.grid[x][y].explored = True
                 level.dungeon.grid[x][y].visible = False
 
@@ -85,7 +85,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = BLACK
+                    color = WHITE_FADED
             else:
                 color = BLACK
 

@@ -70,7 +70,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = BLACK
+                    color = WHITE
 
             elif level.dungeon.grid[x][y].visible:
                 level.dungeon.grid[x][y].explored = True

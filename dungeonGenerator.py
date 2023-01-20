@@ -15,7 +15,7 @@
 
 from random import randint, choice, randrange
 
-from tiles import WallTile, FloorTile, VoidTile, DoorTile
+from tiles import WallTile, FloorTile, DoorTile
 
 # tile constants
 EMPTY = 0
@@ -101,7 +101,7 @@ class dungeonGenerator:
 
         self.height = height
         self.width = width
-        self.grid = [[VoidTile('f1', x, y) for x in range(self.width)] for y in range(self.height)]
+        self.grid = [[WallTile('f1', x, y) for x in range(self.width)] for y in range(self.height)]
         self.rooms = []
         self.doors = []
         self.corridors = []
@@ -169,7 +169,7 @@ class dungeonGenerator:
         yi = (-1, 0, 1) if not yd else (1 * yd, 2 * yd)
         for a in xi:
             for b in yi:
-                if self.grid[a + x][b + y].type != 'void':
+                if self.grid[a + x][b + y].type != 'wall':
                     return False
         return True
 
@@ -215,7 +215,7 @@ class dungeonGenerator:
         if sx + rx < self.width and sy + ry < self.height and sx >= 0 and sy >= 0:
             for x in range(rx):
                 for y in range(ry):
-                    if self.grid[sx + x][sy + y].type != 'void':
+                    if self.grid[sx + x][sy + y].type != 'wall':
                         return False
             return True
         return False
@@ -273,7 +273,7 @@ class dungeonGenerator:
                 touching = 0
                 for xi in range(-distance, distance):
                     for yi in range(-distance, distance):
-                        if self.grid[x + xi][y + yi].type != 'void':
+                        if self.grid[x + xi][y + yi].type != 'wall':
                             touching += 1
                 if not touching:
                     return x, y
@@ -297,7 +297,7 @@ class dungeonGenerator:
         gridCopy = [[EMPTY for x in range(self.width)] for y in range(self.height)]
         for x in range(self.width):
             for y in range(self.height):
-                if self.grid[x][y].type != 'void':
+                if self.grid[x][y].type != 'wall':
                     gridCopy[x][y] = 'x'
         if 'x' in gridCopy:
             print(gridCopy.count('x'))
@@ -384,10 +384,10 @@ class dungeonGenerator:
 
         for x in range(self.width):
             for y in range(self.height):
-                if self.grid[x][y].type == 'void':
+                if self.grid[x][y].type == 'wall':
                     for nx, ny in self.findNeighbours(x, y):
-                        if self.grid[nx][ny].type not in ['void', 'wall']:
-                            self.grid[x][y] = WallTile('f1', x, y)
+                        if self.grid[nx][ny].type not in ['wall', 'wall']:
+                            self.grid[x][y] = WallTile('f1', y, x)
                             break
 
     def connectAllRooms(self, extraDoorChance=0):
@@ -414,7 +414,7 @@ class dungeonGenerator:
                 if self.grid[room.x + i][room.y - 2].type == 'floor' and not doubledoors_flag:
                     connections.append((room.x + i, room.y - 1))
                     doubledoors_flag = True
-                elif self.grid[room.x + i][room.y - 2].type == 'void':
+                elif self.grid[room.x + i][room.y - 2].type == 'wall':
                     doubledoors_flag = False
             doubledoors_flag = False
             for i in range(room.height):
@@ -423,7 +423,7 @@ class dungeonGenerator:
                     connections.append((room.x + room.width, room.y + i))
                     doubledoors_flag = True
                 elif room.x + room.width + 1 < self.width and \
-                        self.grid[room.x + room.width + 1][room.y + i].type == 'void':
+                        self.grid[room.x + room.width + 1][room.y + i].type == 'wall':
                     doubledoors_flag = False
 
             if connections:

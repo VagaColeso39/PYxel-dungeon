@@ -54,7 +54,7 @@ class FloorTile(Tile):
 
 class WallTile(Tile):
     def __init__(self, dungeon, x, y):
-        super().__init__(dungeon, x, y, type='wall')
+        super().__init__(dungeon, y, x, type='wall')
         self.can_step = False
         self.gases = False
         self.fire = False

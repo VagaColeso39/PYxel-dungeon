@@ -5,11 +5,18 @@ import os
 from typing_extensions import Self
 
 tile_sprites = pygame.sprite.Group()
+tiles_sprites = pygame.sprite.Group()
+layers = pygame.sprite.LayeredUpdates()
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'void', 'door']):
+    def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'earth', 'door']):
         pygame.sprite.Sprite.__init__(self)
+        self.source = pygame.image.load(os.path.join('sprites/', f'simple_{type}.jpg'))
+        self.image = self.source
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self._layer = 1
         self.explored = False
         self.visible = False
         self.dungeon = dungeon
@@ -23,6 +30,14 @@ class Tile(pygame.sprite.Sprite):
     
     def change_tile(self, tile_class:Self):
         return tile_class(self.dungeon, self.x, self.y)
+
+    def draw(self):
+        pygame.sprite.Sprite.draw(self)
+        print(self.rect.center)
+
+    def update(self):
+        pygame.sprite.Sprite.update(self)
+        print(self.rect.center)
 
 
 class FloorTile(Tile):
@@ -71,8 +86,6 @@ class WallTile(Tile):
 class EarthTile(Tile):
     def __init__(self, dungeon, x, y):
         super().__init__(dungeon, x, y, type='earth')
-        self.source = pygame.image.load(os.path.join('sprites/', 'simple_earth.jpg'))
-        self.image = self.source
         self.fire = False
         self.effects = []
     

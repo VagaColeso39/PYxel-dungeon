@@ -4,7 +4,7 @@ import pygame
 import dungeonGenerator
 from player import Player
 from level import Level
-from tiles import WallTile, DoorTile, EarthTile, FloorTile
+from tiles import WallTile, DoorTile, EarthTile, FloorTile, tiles_sprites, layers
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
@@ -19,7 +19,6 @@ GRAY = (110, 110, 111)
 GRAY_FADED = (80, 80, 81)
 RED = (255, 0, 0)
 SCREEN = None
-tiles_sprites = pygame.sprite.Group()
 
 
 def main():
@@ -65,7 +64,6 @@ def main():
                 else:
                     if block_size > 20:
                         block_size -= 2
-
         pygame.display.update()
 
 

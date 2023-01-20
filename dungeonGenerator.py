@@ -15,7 +15,7 @@
 
 from random import randint, choice, randrange
 
-from tiles import WallTile, FloorTile, DoorTile, EarthTile
+from tiles import WallTile, FloorTile, DoorTile, EarthTile, layers
 
 from main import tiles_sprites
 
@@ -105,6 +105,8 @@ class dungeonGenerator:
         for i in range(self.width):
             for j in range(self.height):
                 tiles_sprites.add(self.grid[i][j])
+                layers.add(self.grid[i][j])
+
 
     def __iter__(self):
         for xi in range(self.width):

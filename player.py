@@ -6,7 +6,7 @@ class Player:
     def __init__(self, start_pos: list[int, int]):
         self.pos = start_pos
         self.backpack = bags.Backpack(self)
-        self.vision_field = 3
+        self.vision_field = 6
         self.bags = []
         self.weapon = None
         self.armor = None
@@ -51,6 +51,6 @@ class Player:
                     return False
         return True'''
         if pifagor((self.pos[0], self.pos[1]), (cell.x, cell.y)) <= self.vision_field:
-            if all([grid[x][y].type != 'earth' for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)]):
+            if all([grid[x][y].type != 'earth' for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)][:-1]):
                 return True
         return False

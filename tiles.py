@@ -1,6 +1,9 @@
 import pygame
 from typing import Literal
+
 import os
+from typing_extensions import Self
+
 tile_sprites = pygame.sprite.Group()
 
 
@@ -17,6 +20,9 @@ class Tile(pygame.sprite.Sprite):
         self.gases = True  # like poisonous gas or freezing
         self.fire = True
         self.can_burn = True  # i can't think of anything better
+    
+    def change_tile(self, tile_class:Self):
+        return tile_class(self.dungeon, self.x, self.y)
 
 
 class FloorTile(Tile):

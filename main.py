@@ -57,6 +57,7 @@ def main():
                 elif event.key == pygame.K_RIGHT:
                     if player.pos[0] < level.level_width - 1:
                         player.pos[0] += 1
+                level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
             elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
                     if block_size < 100:

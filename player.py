@@ -6,7 +6,7 @@ class Player:
     def __init__(self, start_pos: list[int, int]):
         self.pos = start_pos
         self.backpack = bags.Backpack(self)
-        self.vision_field = 3
+        self.vision_field = 6
         self.bags = []
         self.weapon = None
         self.armor = None

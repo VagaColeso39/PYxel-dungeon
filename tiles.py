@@ -1,5 +1,6 @@
 import pygame
 from typing import Literal
+import os
 tile_sprites = pygame.sprite.Group()
 
 
@@ -64,6 +65,8 @@ class WallTile(Tile):
 class EarthTile(Tile):
     def __init__(self, dungeon, x, y):
         super().__init__(dungeon, x, y, type='earth')
+        self.source = pygame.image.load(os.path.join('sprites/', 'simple_earth.jpg'))
+        self.image = self.source
         self.fire = False
         self.effects = []
     

@@ -51,6 +51,6 @@ class Player:
                     return False
         return True'''
         if pifagor((self.pos[0], self.pos[1]), (cell.x, cell.y)) <= self.vision_field:
-            if all([grid[x][y].type != 'wall' for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)]):
+            if all([grid[x][y].type != 'earth' for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)]):
                 return True
         return False

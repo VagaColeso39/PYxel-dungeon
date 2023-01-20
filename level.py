@@ -37,12 +37,6 @@ class Level:
         for i in range(1, self.closed_rooms_amount + 1):
             self.dungeon.rooms[-1 - i].room_type = "closed"
 
-        '''
-        self.dungeon.connectAllRooms(chance_for_door)
-        unconnected_areas = self.dungeon.findUnconnectedAreas()
-        self.dungeon.joinUnconnectedAreas(unconnected_areas)
-        self.dungeon.connectAllRooms(chance_for_door)
-        '''
         self.dungeon.placeWalls()
 
         self.start_room = self.dungeon.rooms[0]

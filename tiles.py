@@ -3,8 +3,9 @@ from typing import Literal
 tile_sprites = pygame.sprite.Group()
 
 
-class Tile:
+class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'void', 'door']):
+        pygame.sprite.Sprite.__init__(self)
         self.explored = False
         self.visible = False
         self.dungeon = dungeon
@@ -60,9 +61,9 @@ class WallTile(Tile):
         self.fire = False
 
 
-class VoidTile(Tile):
+class EarthTile(Tile):
     def __init__(self, dungeon, x, y):
-        super().__init__(dungeon, x, y, type='void')
+        super().__init__(dungeon, x, y, type='earth')
         self.fire = False
         self.effects = []
     

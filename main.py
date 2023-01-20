@@ -4,7 +4,7 @@ import pygame
 import dungeonGenerator
 from player import Player
 from level import Level
-from tiles import WallTile, DoorTile, VoidTile, FloorTile
+from tiles import WallTile, DoorTile, EarthTile, FloorTile
 
 BLACK = (0, 0, 0)
 WHITE = (200, 200, 200)
@@ -19,12 +19,14 @@ GRAY = (110, 110, 111)
 GRAY_FADED = (80, 80, 81)
 RED = (255, 0, 0)
 SCREEN = None
+tiles_sprites = pygame.sprite.Group()
+
 
 def main():
     global SCREEN, CLOCK
     multiplier = random.randint(50, 60)
     chance_for_door = 100
-    block_size = 10
+    block_size = 20
     level = Level(multiplier, chance_for_door, 1)
 
     pygame.init()
@@ -44,13 +46,24 @@ def main():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    player.pos[1] -= 1
+                    if player.pos[1] > 0:
+                        player.pos[1] -= 1
                 elif event.key == pygame.K_DOWN:
-                    player.pos[1] += 1
+                    if player.pos[1] < level.level_height - 1:
+                        player.pos[1] += 1
                 elif event.key == pygame.K_LEFT:
-                    player.pos[0] -= 1
+                    if player.pos[0] > 0:
+                        player.pos[0] -= 1
                 elif event.key == pygame.K_RIGHT:
-                    player.pos[0] += 1
+                    if player.pos[0] < level.level_width - 1:
+                        player.pos[0] += 1
+            elif event.type == pygame.MOUSEWHEEL:
+                if event.y > 0:
+                    if block_size < 100:
+                        block_size += 2
+                else:
+                    if block_size > 20:
+                        block_size -= 2
 
         pygame.display.update()
 
@@ -58,11 +71,11 @@ def main():
 def drawGrid(player:Player, level:Level, blockSize: int = 20):
     for x in range(0, level.level_width):
         for y in range(0, level.level_height):
-            color = WHITE
+            color = LIGHT_BROWN
             if player.is_visible(level.dungeon.grid, level.dungeon.grid[x][y]):
                 level.dungeon.grid[x][y].visible = True
-                if level.dungeon.grid[x][y].type == 'void':
-                    pass  # empty cell
+                if level.dungeon.grid[x][y].type == 'earth':
+                    color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN
                 elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
@@ -70,14 +83,14 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = WHITE
+                    color = BLACK
 
             elif level.dungeon.grid[x][y].visible:
                 level.dungeon.grid[x][y].explored = True
                 level.dungeon.grid[x][y].visible = False
 
-                if level.dungeon.grid[x][y].type == 'void':
-                    pass  # empty cell
+                if level.dungeon.grid[x][y].type == 'earth':
+                    color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work

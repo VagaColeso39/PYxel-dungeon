@@ -15,17 +15,11 @@
 
 from random import randint, choice, randrange
 
-from tiles import WallTile, FloorTile, DoorTile
+from tiles import WallTile, FloorTile, DoorTile, EarthTile
 
-# tile constants
-EMPTY = 0
-FLOOR = 1
-CORRIDOR = 2
-DOOR = 3
-DEADEND = 4
-WALL = 5
-OBSTACLE = 6
-CAVE = 7
+from main import tiles_sprites
+
+
 
 
 class dungeonRoom:
@@ -101,13 +95,16 @@ class dungeonGenerator:
 
         self.height = height
         self.width = width
-        self.grid = [[WallTile('f1', x, y) for x in range(self.width)] for y in range(self.height)]
+        self.grid = [[EarthTile('f1', x, y) for y in range(self.height)] for x in range(self.width)]
         self.rooms = []
         self.doors = []
         self.corridors = []
         self.deadends = []
 
         self.graph = {}
+        for i in range(self.width):
+            for j in range(self.height):
+                tiles_sprites.add(self.grid[i][j])
 
     def __iter__(self):
         for xi in range(self.width):
@@ -215,7 +212,7 @@ class dungeonGenerator:
         if sx + rx < self.width and sy + ry < self.height and sx >= 0 and sy >= 0:
             for x in range(rx):
                 for y in range(ry):
-                    if self.grid[sx + x][sy + y].type != 'wall':
+                    if self.grid[sx + x][sy + y].type != 'earth':
                         return False
             return True
         return False
@@ -294,7 +291,7 @@ class dungeonGenerator:
 
         unconnectedAreas = []
         areaCount = 0
-        gridCopy = [[EMPTY for x in range(self.width)] for y in range(self.height)]
+        gridCopy = [[0 for x in range(self.width)] for y in range(self.height)]
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[x][y].type != 'wall':

@@ -6,7 +6,8 @@ from player import Player
 from level import Level
 from tiles import WallTile, DoorTile, EarthTile, FloorTile, tiles_sprites, layers
 
-BLACK = (0, 0, 0)
+BLACK = (20, 20, 20)
+BLACK_FADED = (0, 0, 0)
 WHITE = (200, 200, 200)
 WHITE_FADED = (160, 160, 160)
 BROWN = (205, 120, 34)
@@ -77,8 +78,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                     color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN
-                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
-                    color = BROWN
+
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'wall':
@@ -92,12 +92,10 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                     color = LIGHT_BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN_FADED
-                elif level.dungeon.grid[x][y].type == 'corridor':  # currently doesnt work
-                    color = BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = WHITE_FADED
+                    color = BLACK_FADED
             else:
                 color = BLACK
 

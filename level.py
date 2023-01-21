@@ -17,7 +17,7 @@ class Level:
                 self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width)
                 self.room_creator()
 
-    def __init__(self, multiplier, chance_for_door, num, mod=None, start_pos: list[int, int] = None):
+    def __init__(self, multiplier, chance_for_door, num, block_size, mod=None, start_pos: list[int, int] = None):
         self.multiplier = multiplier
         self.chance_for_door = chance_for_door
         self.num = num
@@ -29,7 +29,7 @@ class Level:
         self.level_height = int(6.4 * self.multiplier / 10)
         self.room_amount = int(2.2 * self.multiplier / 10)
 
-        self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width)
+        self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width, block_size)
         self.room_creator()
 
         self.dungeon.rooms[-1].room_type = "treasure"

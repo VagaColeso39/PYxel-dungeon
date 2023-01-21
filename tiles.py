@@ -12,10 +12,9 @@ layers = pygame.sprite.LayeredUpdates()
 class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'earth', 'door']):
         pygame.sprite.Sprite.__init__(self)
-        self.source = pygame.image.load(os.path.join('sprites/', f'simple_{type}.jpg'))
-        self.image = self.source
+        self.image = pygame.image.load(os.path.join('sprites/', f'simple_{type}.jpg'))
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.center = (x * dungeon.block_size, y * dungeon.block_size)
         self._layer = 1
         self.explored = False
         self.visible = False

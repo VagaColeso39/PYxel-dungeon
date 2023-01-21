@@ -17,6 +17,7 @@ LIGHT_BROWN_FADED = (200, 120, 40)
 SOFT_BROWN = (126, 109, 91)
 SOFT_BROWN_FADED = (96, 79, 61)
 GRAY = (110, 110, 111)
+GRAY_BORDER = (130, 130, 131)
 GRAY_FADED = (80, 80, 81)
 RED = (255, 0, 0)
 SCREEN = None
@@ -27,7 +28,7 @@ def main():
     multiplier = random.randint(50, 60)
     chance_for_door = 100
     block_size = 20
-    level = Level(multiplier, chance_for_door, 1)
+    level = Level(multiplier, chance_for_door, 1, block_size)
 
     pygame.init()
     SCREEN = pygame.display.set_mode((level.level_width * block_size, level.level_height * block_size))
@@ -58,13 +59,15 @@ def main():
                     if player.pos[0] < level.level_width - 1:
                         player.pos[0] += 1
                 level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
-            elif event.type == pygame.MOUSEWHEEL:
+                """
+                elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
                     if block_size < 100:
                         block_size += 2
                 else:
                     if block_size > 20:
                         block_size -= 2
+                """
         pygame.display.update()
 
 
@@ -81,7 +84,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = BLACK
+                    color = GRAY
 
             elif level.dungeon.grid[x][y].visible or level.dungeon.grid[x][y].explored:
                 level.dungeon.grid[x][y].explored = True
@@ -95,7 +98,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'door':
                     color = LIGHT_BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'wall':
-                    color = BLACK_FADED
+                    color = GRAY_FADED
             else:
                 color = BLACK
 
@@ -104,8 +107,8 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
 
             cell = pygame.Rect(x * blockSize, y * blockSize, blockSize, blockSize)
             pygame.draw.rect(SCREEN, color, cell)
-            if color not in [BLACK, RED]:
-                pygame.draw.rect(SCREEN, GRAY, cell, 1)
+            if color not in [RED, BLACK]:
+                pygame.draw.rect(SCREEN, GRAY_BORDER, cell, 1)
 
 
 if __name__ == "__main__":

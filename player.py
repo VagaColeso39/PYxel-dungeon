@@ -38,19 +38,7 @@ class Player:
         return self.backpack.pick_up(item)
 
     def is_visible(self, grid:list, cell:Tile):
-        '''x = min(self.x, cell.x)
-        xi = self.pos[0] + cell.x - x
-        y = min(self.pos[1], cell.y)
-        yi = self.pos[1] + cell.y - y
-
-        if xi - x > self.vision_field or yi - y > self.vision_field:
-            return False
-        for i in range(x, xi + 1):
-            for j in range(y, yi + 1):
-                if grid[x][y].type == 'wall':
-                    return False
-        return True'''
         if pifagor((self.pos[0], self.pos[1]), (cell.x, cell.y)) <= self.vision_field:
-            if all([grid[x][y].type != 'earth' for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)][:-1]):
+            if all([grid[x][y].type not in ('earth', 'wall') for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)][:-1]):
                 return True
         return False

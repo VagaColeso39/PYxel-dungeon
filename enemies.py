@@ -16,6 +16,9 @@ class Enemy(pygame.sprite.Sprite):
         pass
 
     def try_move(self, player, grid, x, y):
+        if player.x == x and player.y == y:
+            self.attack(player)
+            return False
         if self.is_flying:
             if grid[x][y].type not in ['wall', 'earth']:
                 return True
@@ -24,16 +27,16 @@ class Enemy(pygame.sprite.Sprite):
                 return True
         return False
 
-    def move_to(self, grid: list, x: int, y: int):
+    def move_to(self, player, grid: list, x: int, y: int):
         if x > self.x:
-            if self.try_move(grid, self.x + 1, self.y):
+            if self.try_move(player, grid, self.x + 1, self.y):
                 self.x += 1
         elif x < self.x:
-            if self.try_move(grid, self.x - 1, self.y):
+            if self.try_move(player, grid, self.x - 1, self.y):
                 self.x -= 1
         elif y > self.y:
-            if self.try_move(grid, self.x, self.y + 1):
+            if self.try_move(player, grid, self.x, self.y + 1):
                 self.y += 1
         elif y < self.y:
-            if self.try_move(grid, self.x, self.y - 1):
+            if self.try_move(player, grid, self.x, self.y - 1):
                 self.y -= 1

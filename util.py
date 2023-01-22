@@ -1,10 +1,12 @@
 import math
 
+
 def manhattan(a, b):
-    return sum(abs(val1-val2)**2 for val1, val2 in zip(a,b))
+    return sum(abs(val1 - val2) ** 2 for val1, val2 in zip(a, b))
+
 
 def pifagor(a, b):
-    return math.floor(math.sqrt(sum(abs(val1-val2)**2 for val1, val2 in zip(a,b))))
+    return math.floor(math.sqrt(sum(abs(val1 - val2) ** 2 for val1, val2 in zip(a, b))))
 
 def ballistica(a, b, stop_types, grid):
     last = None
@@ -12,6 +14,7 @@ def ballistica(a, b, stop_types, grid):
         if grid[i[0]][i[1]].type in stop_types:
             return last
         last = i
+
 
 def bresenham(x0, y0, x1, y1):
     dx = x1 - x0
@@ -29,12 +32,12 @@ def bresenham(x0, y0, x1, y1):
         dx, dy = dy, dx
         xx, xy, yx, yy = 0, ysign, xsign, 0
 
-    D = 2*dy - dx
+    D = 2 * dy - dx
     y = 0
 
     for x in range(dx + 1):
-        yield x0 + x*xx + y*yx, y0 + x*xy + y*yy
+        yield x0 + x * xx + y * yx, y0 + x * xy + y * yy
         if D >= 0:
             y += 1
-            D -= 2*dx
-        D += 2*dy
+            D -= 2 * dx
+        D += 2 * dy

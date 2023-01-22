@@ -7,14 +7,14 @@ class Level:
         creator_counter = 0
         error_counter = 0
         while creator_counter < self.room_amount:
-            if self.dungeon.placeRandomRooms(4, 9, 1, 1, 1):
+            if self.dungeon.placeRandomRooms(4, 9, 1, 3, 1):
                 creator_counter += 1
                 error_counter = 0
             else:
                 error_counter += 1
             if error_counter >= 100000:
                 print(f"Cant generate room! {creator_counter} from {self.room_amount} of rooms is generated")
-                self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width)
+                self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width, self.block_size)
                 self.room_creator()
 
     def __init__(self, multiplier, chance_for_door, num, block_size, mod=None, start_pos: list[int, int] = None):
@@ -24,10 +24,11 @@ class Level:
         self.mod = mod
         self.start_pos = start_pos
         self.board = None
+        self.block_size = block_size
 
-        self.level_width = int(6.4 * self.multiplier / 10)
-        self.level_height = int(6.4 * self.multiplier / 10)
-        self.room_amount = int(2.2 * self.multiplier / 10)
+        self.level_width = int(7.4 * self.multiplier / 10)
+        self.level_height = int(7.4 * self.multiplier / 10)
+        self.room_amount = int(2 * self.multiplier / 10)
 
         self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width, block_size)
         self.room_creator()

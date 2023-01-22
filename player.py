@@ -1,6 +1,7 @@
 import bags
-from util import *
 from tiles import Tile
+from util import *
+
 
 class Player:
     def __init__(self, start_pos: list[int, int]):
@@ -30,15 +31,30 @@ class Player:
         self.speed_multipliers = []
         self.walking_speed_multipliers = []
         self.attack_speed_multipliers = []
-    
+        self.keys = 100  # FIX
+
     def hit_hero(self, damage):
         self.hp -= damage
-    
+
     def pick_up(self, item):
         return self.backpack.pick_up(item)
 
-    def is_visible(self, grid:list, cell:Tile):
+    def is_visible(self, grid: list, cell: Tile):
         if pifagor((self.pos[0], self.pos[1]), (cell.x, cell.y)) <= self.vision_field:
-            if all([grid[x][y].type not in ('earth', 'wall') for x, y in bresenham(self.pos[0], self.pos[1], cell.x, cell.y)][:-1]):
+            if all([(grid[x][y].type not in ('earth', 'wall', 'door') or (
+                    grid[x][y].type == 'door' and grid[x][y].opened)) for x, y in
+                    bresenham(self.pos[0], self.pos[1], cell.x, cell.y)][:-1]):
                 return True
         return False
+
+    def try_move(self, grid, x, y):
+        if grid[x][y].type == 'door':
+            if grid[x][y].modificator == 'closed':
+                if self.keys > 0:
+                    self.keys -= 1
+                    grid[x][y].modificator = None
+                    return True
+                return False
+            grid[x][y].opened = True
+        if grid[x][y].type not in ['wall', 'void']:
+            return True

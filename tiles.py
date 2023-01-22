@@ -120,3 +120,5 @@ class DoorTile(Tile):
     
     def step(self, reason):
         self.opened = True
+
+

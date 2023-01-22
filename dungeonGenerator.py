@@ -11,11 +11,11 @@
 # Feel free to use this as you wish, but please keep this header #
 #                                                                #
 ##################################################################
+import random
 from random import randint, randrange
 
-from tiles import WallTile, FloorTile, DoorTile, EarthTile, layers
-
 from main import tiles_sprites
+from tiles import WallTile, FloorTile, DoorTile, EarthTile, layers
 
 
 class dungeonRoom:
@@ -28,7 +28,7 @@ class dungeonRoom:
 
 
 class dungeonGenerator:
-    def __init__(self, height, width, block_size) -> object:
+    def __init__(self, height, width, block_size):
 
         self.height = height
         self.width = width
@@ -45,12 +45,10 @@ class dungeonGenerator:
                 tiles_sprites.add(self.grid[i][j])
                 layers.add(self.grid[i][j])
 
-
     def __iter__(self):
         for xi in range(self.width):
             for yi in range(self.height):
                 yield xi, yi, self.grid[xi][yi]
-
 
     def findNeighbours(self, x, y):
         xi = (0, -1, 1) if 0 < x < self.width - 1 else ((0, -1) if x > 0 else (0, 1))
@@ -86,7 +84,6 @@ class dungeonGenerator:
                         return False
             return True
         return False
-
 
     def placeRoom(self, startX, startY, roomWidth, roomHeight, ignoreOverlap=False):
         """
@@ -142,18 +139,31 @@ class dungeonGenerator:
             return True
         return False
 
-    def placeWalls(self):
-        """
-        Places wall tiles around all floor, door and corridor tiles
-        As some functions (like floodFill() and anything that uses it) dont distinguish between tile types it is best called later/last
-        
-        Args:
-            none
-            
-        Returns:
-            none
-        """
+    def placeDoors(self):
+        for room in self.rooms:
+            if room.room_type == 'closed':
+                if random.randint(0, 1):
+                    y_choose = range(room.y, room.y + room.height)
+                    y = random.choice(y_choose)
+                    x = random.choice((room.x - 1, room.x + room.width))
+                    self.grid[x][y] = DoorTile(self, x, y, 'locked')
+                else:
+                    x_choose = range(room.x, room.x + room.width)
+                    x = random.choice(x_choose)
+                    y = random.choice((room.y - 1, room.y + room.height))
+                    self.grid[x][y] = DoorTile(self, x, y, 'locked')
+            else:
+                y_choose = range(room.y, room.y + room.height)
+                y = random.choice(y_choose)
+                x = random.choice((room.x - 1, room.x + room.width))
+                self.grid[x][y] = DoorTile(self, x, y)
 
+                x_choose = range(room.x, room.x + room.width)
+                x = random.choice(x_choose)
+                y = random.choice((room.y - 1, room.y + room.height))
+                self.grid[x][y] = DoorTile(self, x, y)
+
+    def placeWalls(self):
         for x in range(self.width):
             for y in range(self.height):
                 if self.grid[x][y].type != 'floor':
@@ -162,4 +172,4 @@ class dungeonGenerator:
                             self.grid[x][y] = WallTile(self, y, x)
                             break
 
-
+        self.placeDoors()

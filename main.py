@@ -17,8 +17,9 @@ LIGHT_BROWN_FADED = (200, 120, 40)
 SOFT_BROWN = (126, 109, 91)
 SOFT_BROWN_FADED = (96, 79, 61)
 GRAY = (110, 110, 111)
-GRAY_BORDER = (130, 130, 131)
 GRAY_FADED = (80, 80, 81)
+GRAY_BORDER = (130, 130, 131)
+
 RED = (255, 0, 0)
 SCREEN = None
 
@@ -46,19 +47,28 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
+                moved = False
                 if event.key == pygame.K_UP:
-                    if player.pos[1] > 0:
+                    if player.pos[1] > 0 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] - 1):
                         player.pos[1] -= 1
+                        moved = True
                 elif event.key == pygame.K_DOWN:
-                    if player.pos[1] < level.level_height - 1:
+                    if player.pos[1] < level.level_height - 1 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] + 1):
                         player.pos[1] += 1
+                        moved = True
                 elif event.key == pygame.K_LEFT:
-                    if player.pos[0] > 0:
+                    if player.pos[0] > 0 and player.try_move(level.dungeon.grid, player.pos[0] - 1, player.pos[1]):
                         player.pos[0] -= 1
+                        moved = True
                 elif event.key == pygame.K_RIGHT:
-                    if player.pos[0] < level.level_width - 1:
+                    if player.pos[0] < level.level_width - 1 and player.try_move(level.dungeon.grid, player.pos[0] + 1, player.pos[1]):
                         player.pos[0] += 1
-                level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
+                        moved = True
+                if moved:
+                    if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
+                        level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
+
+
                 """
                 elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
@@ -82,7 +92,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN
                 elif level.dungeon.grid[x][y].type == 'door':
-                    color = LIGHT_BROWN
+                    color = WHITE
                 elif level.dungeon.grid[x][y].type == 'wall':
                     color = GRAY
 
@@ -95,7 +105,7 @@ def drawGrid(player:Player, level:Level, blockSize: int = 20):
                 elif level.dungeon.grid[x][y].type == 'floor':
                     color = BROWN_FADED
                 elif level.dungeon.grid[x][y].type == 'door':
-                    color = LIGHT_BROWN_FADED
+                    color = WHITE_FADED
                 elif level.dungeon.grid[x][y].type == 'wall':
                     color = GRAY_FADED
             else:

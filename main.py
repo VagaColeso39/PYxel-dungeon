@@ -27,6 +27,7 @@ def main():
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
     camera = Camera(player, level, SCREEN)
+    camera.move_to(*player.pos)
     print(player.pos)
     while True:
         CLOCK.tick_busy_loop(60)
@@ -65,7 +66,7 @@ def main():
                 else:
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
                 
-        pygame.display.flip()
+        pygame.display.update()
 
 
 

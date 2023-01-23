@@ -26,9 +26,11 @@ def main():
     player = Player(start_pos=level.start_pos)
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
-    print(player.pos)
     camera = Camera(player, level, SCREEN)
+    print(player.pos)
     while True:
+        CLOCK.tick_busy_loop(60)
+        pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
         camera.drawGrid()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -55,18 +57,15 @@ def main():
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
                         level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
+                    camera.move_to(*player.pos)
 
-
-                """
-                elif event.type == pygame.MOUSEWHEEL:
+            elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
-                    if block_size < 100:
-                        block_size += 2
+                    camera.set_size(camera.multiplier + 0.1, 'multiplier')
                 else:
-                    if block_size > 20:
-                        block_size -= 2
-                """
-        pygame.display.update()
+                    camera.set_size(camera.multiplier - 0.1, 'multiplier')
+                
+        pygame.display.flip()
 
 
 

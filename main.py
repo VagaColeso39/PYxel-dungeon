@@ -1,28 +1,24 @@
 import random
 import sys
 import pygame
-import dungeonGenerator
 from player import Player
 from level import Level
 from tiles import WallTile, DoorTile, EarthTile, FloorTile, tiles_sprites, layers
 from camera import Camera
 from constants import *
 
-SCREEN = None
+multiplier = random.randint(50, 60)
+chance_for_door = 100
+block_size = 20
+level = Level(multiplier, chance_for_door, 1, block_size)
+
+pygame.init()
+SCREEN = pygame.display.set_mode((level.level_width * block_size, level.level_height * block_size))
+CLOCK = pygame.time.Clock()
+SCREEN.fill(BLACK)
 
 
 def main():
-    global SCREEN, CLOCK
-    multiplier = random.randint(50, 60)
-    chance_for_door = 100
-    block_size = 20
-    level = Level(multiplier, chance_for_door, 1, block_size)
-
-    pygame.init()
-    SCREEN = pygame.display.set_mode((level.level_width * block_size, level.level_height * block_size))
-    CLOCK = pygame.time.Clock()
-    SCREEN.fill(BLACK)
-
     player = Player(start_pos=level.start_pos)
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
@@ -65,7 +61,9 @@ def main():
                     camera.set_size(camera.multiplier + 0.1, 'multiplier')
                 else:
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
-                
+
+        tiles_sprites.update()
+        layers.draw(SCREEN)
         pygame.display.update()
 
 

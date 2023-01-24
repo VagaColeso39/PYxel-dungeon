@@ -3,12 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="fixed bug with two fields of view (in dungeon generator) + QoL">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dungeonGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/dungeonGenerator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sprites/simple_door.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/sprites/simple_door.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/tiles.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/util.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,8 +115,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.dungeonGenerator" />
         <item itemvalue="Python.tiles" />
+        <item itemvalue="Python.dungeonGenerator" />
       </list>
     </recent_temporary>
   </component>

@@ -14,8 +14,7 @@
 import random
 from random import randint, randrange
 
-from main import tiles_sprites
-from tiles import WallTile, FloorTile, DoorTile, EarthTile, layers
+from tiles import WallTile, FloorTile, DoorTile, EarthTile, layers, tiles_sprites
 
 
 class dungeonRoom:

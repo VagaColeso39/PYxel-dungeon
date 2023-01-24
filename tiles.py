@@ -1,10 +1,8 @@
 import pygame
 from typing import Literal
-
 import os
 from typing_extensions import Self
 
-tile_sprites = pygame.sprite.Group()
 tiles_sprites = pygame.sprite.Group()
 layers = pygame.sprite.LayeredUpdates()
 
@@ -13,6 +11,7 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'earth', 'door']):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(os.path.join('sprites/', f'simple_{type}.jpg'))
+        self.image = pygame.transform.scale(self.image, (20, 20))
         self.rect = self.image.get_rect()
         self.rect.center = (x * dungeon.block_size, y * dungeon.block_size)
         self._layer = 1
@@ -26,17 +25,11 @@ class Tile(pygame.sprite.Sprite):
         self.gases = True  # like poisonous gas or freezing
         self.fire = True
         self.can_burn = True  # i can't think of anything better
+        layers.add(self)
+        tiles_sprites.add(self)
     
     def change_tile(self, tile_class:Self):
         return tile_class(self.dungeon, self.x, self.y)
-
-    def draw(self):
-        pygame.sprite.Sprite.draw(self)
-        print(self.rect.center)
-
-    def update(self):
-        pygame.sprite.Sprite.update(self)
-        print(self.rect.center)
 
 
 class FloorTile(Tile):
@@ -44,8 +37,6 @@ class FloorTile(Tile):
         super().__init__(dungeon, x, y, type='floor')
         if inventory is None:
             inventory = []
-        self.image = pygame.image.load('sprites/simple_floor.jpg')
-        self.rect = self.image.get_rect()
         self.inventory = inventory
         self.modificator = modificator  # can be high_grass, low_grass, coals, wooden_floor, water, trap
         if modificator == 'trap':

@@ -14,6 +14,7 @@ class Level:
                 error_counter += 1
             if error_counter >= 100000:
                 print(f"Cant generate room! {creator_counter} from {self.room_amount} of rooms is generated")
+                self.room_amount -= 1
                 self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width, self.block_size)
                 self.room_creator()
 

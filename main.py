@@ -15,7 +15,7 @@ level = Level(multiplier, chance_for_door, 1, block_size)
 pygame.init()
 SCREEN = pygame.display.set_mode((level.level_width * block_size, level.level_height * block_size))
 CLOCK = pygame.time.Clock()
-SCREEN.fill(BLACK)
+SCREEN.fill(EMPTY_COLOR)
 
 
 def main():
@@ -34,6 +34,9 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
                 moved = False
                 if event.key == pygame.K_UP:
                     if player.pos[1] > 0 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] - 1):

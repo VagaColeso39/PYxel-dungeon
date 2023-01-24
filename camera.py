@@ -23,48 +23,42 @@ class Camera:
         self.max_block_size = 100
 
     def drawGrid(self):
-        self.screen.fill(BLACK)
+        self.screen.fill(EMPTY_COLOR)
         for x in range(0, self.level.level_width):
             for y in range(0, self.level.level_height):
-                color = LIGHT_BROWN
+                color = EARTH_COLOR
                 if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
                     self.level.dungeon.grid[x][y].visible = True
                     if self.level.dungeon.grid[x][y].type == 'earth':
-                        color = LIGHT_BROWN
+                        color = EARTH_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'floor':
-                        color = BROWN
+                        color = FLOOR_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'door':
-                        color = WHITE
+                        color = DOOR_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'wall':
-                        color = GRAY
+                        color = WALL_COLOR
 
                 elif self.level.dungeon.grid[x][y].visible or self.level.dungeon.grid[x][y].explored:
                     self.level.dungeon.grid[x][y].explored = True
                     self.level.dungeon.grid[x][y].visible = False
                     if self.level.dungeon.grid[x][y].type == 'earth':
-                        color = LIGHT_BROWN_FADED
+                        color = EARTH_COLOR_FADED
                     elif self.level.dungeon.grid[x][y].type == 'floor':
-                        color = BROWN_FADED
+                        color = FLOOR_COLOR_FADED
                     elif self.level.dungeon.grid[x][y].type == 'door':
-                        color = WHITE_FADED
+                        color = DOOR_COLOR_FADED
                     elif self.level.dungeon.grid[x][y].type == 'wall':
-                        color = GRAY_FADED
+                        color = WALL_COLOR_FADED
                 else:
-                    color = BLACK
+                    color = EMPTY_COLOR
 
                 if self.player.pos[0] == x and self.player.pos[1] == y:
-                    color = RED
+                    color = PLAYER_COLOR
 
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
-                '''cell = self.level.dungeon.grid[x][y]
-                cell.x = int(x * self.block_size - self.tl_x)
-                cell.y = int(y * self.block_size - self.tl_y)
-                cell.image = pygame.transform.scale(cell.source, (self.block_size, self.block_size))
-                cell.rect = cell.image.get_rect()
-                cell.rect.center = (cell.x, cell.y)'''
 
                 pygame.draw.rect(self.screen, color, cell)
-                if color not in [RED, BLACK]:
+                if color not in [PLAYER_COLOR, EMPTY_COLOR]:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
         self._next_frame()  # call in the end
 

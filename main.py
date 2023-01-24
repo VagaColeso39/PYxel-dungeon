@@ -5,7 +5,7 @@ from player import Player
 from level import Level
 from tiles import WallTile, DoorTile, EarthTile, FloorTile, tiles_sprites, layers
 from camera import Camera
-from constants import *
+from constants_original import *
 
 multiplier = random.randint(55, 60)
 chance_for_door = 100
@@ -25,6 +25,7 @@ def main():
     camera = Camera(player, level, SCREEN)
     camera.move_to(*player.pos)
     print(player.pos)
+    mouse_pos = None
     while True:
         CLOCK.tick_busy_loop(60)
         pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
@@ -61,6 +62,15 @@ def main():
                     camera.set_size(camera.multiplier + 0.1, 'multiplier')
                 else:
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+            
+            if pygame.mouse.get_pressed()[0]:
+                x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                y = camera.cy + 5 * (mouse_pos[1] - pygame.mouse.get_pos()[1])
+                camera.move_to(x, y, 'point')
+                mouse_pos = pygame.mouse.get_pos()
 
         layers.draw(SCREEN)
         pygame.display.update()

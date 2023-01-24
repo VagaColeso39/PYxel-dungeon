@@ -1,7 +1,7 @@
 import pygame
 from player import Player
 from level import Level
-from constants import *
+from constants_original import *
 from typing import Literal
 from tiles import tiles_sprites
 

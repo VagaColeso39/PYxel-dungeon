@@ -44,7 +44,7 @@ def main():
                         player.pos[1] += 1
                         moved = True
                 elif event.key == pygame.K_LEFT:
-                    if player.pos[0] > 0 and player.try_move(level.dungeon.grid, player.pos[0] - 1, player.pos[1]):
+                    if player.pos[0] > 0 and player.try_move(level.dungeon.grid, player.pos[0] - 1, player.pos[1] ):
                         player.pos[0] -= 1
                         moved = True
                 elif event.key == pygame.K_RIGHT:
@@ -62,7 +62,6 @@ def main():
                 else:
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
 
-        tiles_sprites.update()
         layers.draw(SCREEN)
         pygame.display.update()
 

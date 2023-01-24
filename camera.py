@@ -28,20 +28,19 @@ class Camera:
                 color = LIGHT_BROWN
                 if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
                     self.level.dungeon.grid[x][y].visible = True
-                    if self.level.dungeon.grid[x][y].type == 'earth':
+                    """if self.level.dungeon.grid[x][y].type == 'earth':
                         color = LIGHT_BROWN
                     elif self.level.dungeon.grid[x][y].type == 'floor':
                         color = BROWN
                     elif self.level.dungeon.grid[x][y].type == 'door':
                         color = WHITE
                     elif self.level.dungeon.grid[x][y].type == 'wall':
-                        color = GRAY
+                        color = GRAY"""
 
                 elif self.level.dungeon.grid[x][y].visible or self.level.dungeon.grid[x][y].explored:
                     self.level.dungeon.grid[x][y].explored = True
                     self.level.dungeon.grid[x][y].visible = False
-
-                    if self.level.dungeon.grid[x][y].type == 'earth':
+                    """if self.level.dungeon.grid[x][y].type == 'earth':
                         color = LIGHT_BROWN_FADED
                     elif self.level.dungeon.grid[x][y].type == 'floor':
                         color = BROWN_FADED
@@ -50,16 +49,23 @@ class Camera:
                     elif self.level.dungeon.grid[x][y].type == 'wall':
                         color = GRAY_FADED
                 else:
-                    color = BLACK
+                    color = BLACK"""
 
                 if self.player.pos[0] == x and self.player.pos[1] == y:
                     color = RED
 
-                cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
-                
-                pygame.draw.rect(self.screen, color, cell)
+                #cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
+                cell = self.level.dungeon.grid[x][y]
+                cell.x = int(x * self.block_size - self.tl_x)
+                cell.y = int(y * self.block_size - self.tl_y)
+                cell.image = pygame.transform.scale(cell.source, (self.block_size, self.block_size))
+                cell.rect = cell.image.get_rect()
+                cell.rect.center = (cell.x, cell.y)
+                self.level.dungeon.grid[x][y].update() #drawing sprite on screen
+
+                '''pygame.draw.rect(self.screen, color, cell)
                 if color not in [RED, BLACK]:
-                    pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
+                    pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)'''
                 
         self._next_frame()  # call in the end
 

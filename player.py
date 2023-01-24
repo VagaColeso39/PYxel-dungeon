@@ -53,8 +53,15 @@ class Player:
                 if self.keys > 0:
                     self.keys -= 1
                     grid[x][y].modificator = None
+                    grid[x][y].image = grid[x][y].opened_source
+                    grid[x][y].rect = grid[x][y].image.get_rect()
+                    grid[x][y].update()
                     return True
                 return False
+            grid[x][y].image = grid[x][y].opened_source
+            grid[x][y].rect = grid[x][y].image.get_rect()
+            grid[x][y].update()
             grid[x][y].opened = True
+
         if grid[x][y].type not in ['wall', 'void']:
             return True

@@ -10,8 +10,8 @@ layers = pygame.sprite.LayeredUpdates()
 class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'earth', 'door']):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join('sprites/', f'simple_{type}.jpg'))
-        self.image = pygame.transform.scale(self.image, (20, 20))
+        self.source = pygame.image.load(os.path.join('sprites/', f'simple_{type}.jpg'))
+        self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
         self.rect.center = (x * dungeon.block_size, y * dungeon.block_size)
         self._layer = 1
@@ -95,6 +95,12 @@ class EarthTile(Tile):
 class DoorTile(Tile):
     def __init__(self, dungeon, x, y, modificator=None):
         super().__init__(dungeon, x, y, type='door')
+        self.opened_source = pygame.image.load(os.path.join('sprites/', f'simple_door_opened.jpg'))
+        if modificator == 'locked':
+            self.source = pygame.image.load(os.path.join('sprites/', f'simple_door_locked.jpg'))
+            self.image = pygame.transform.scale(self.source, (20, 20))
+            self.rect = self.image.get_rect()
+
         self.modificator = modificator  # can be hided, locked or special (to burn it)
         self.opened = False
         self.gases &= self.opened  # link to `opened` because they must have same values

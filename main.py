@@ -25,7 +25,8 @@ def main():
     camera = Camera(player, level, SCREEN)
     camera.move_to(*player.pos)
     print(player.pos)
-    mouse_pos = None
+    mouse_pos = (0, 0)
+    current_x, current_y = 0, 0
     while True:
         CLOCK.tick_busy_loop(60)
         pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
@@ -68,12 +69,16 @@ def main():
             
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
+                current_x, current_y = camera.cx, camera.cy
             
             if pygame.mouse.get_pressed()[0]:
-                x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                '''x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])
                 y = camera.cy + 5 * (mouse_pos[1] - pygame.mouse.get_pos()[1])
                 camera.move_to(x, y, 'point')
-                mouse_pos = pygame.mouse.get_pos()
+                mouse_pos = pygame.mouse.get_pos()'''
+                x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
+                camera.move_to(x, y, 'point')
 
         layers.draw(SCREEN)
         pygame.display.update()

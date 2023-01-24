@@ -7,7 +7,7 @@ from tiles import WallTile, DoorTile, EarthTile, FloorTile, tiles_sprites, layer
 from camera import Camera
 from constants import *
 
-multiplier = random.randint(50, 60)
+multiplier = random.randint(55, 60)
 chance_for_door = 100
 block_size = 20
 level = Level(multiplier, chance_for_door, 1, block_size)

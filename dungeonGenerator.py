@@ -39,11 +39,6 @@ class dungeonGenerator:
         self.grid = [[EarthTile(self, x, y) for y in range(self.height)] for x in range(self.width)]
 
         self.graph = {}
-        for i in range(self.width):
-            for j in range(self.height):
-                tiles_sprites.add(self.grid[i][j])
-                layers.add(self.grid[i][j])
-
     def __iter__(self):
         for xi in range(self.width):
             for yi in range(self.height):

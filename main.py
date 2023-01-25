@@ -27,10 +27,15 @@ def main():
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
     camera = Camera(player, level, SCREEN)
     camera.move_to(*player.pos)
-    print(player.pos)
     mouse_pos = (0, 0)
     current_x, current_y = 0, 0
     mouse_pos = None
+
+    pygame.mixer.music.load('music/main_theme.wav')
+    pygame.mixer.music.play(-1)
+    dig_sound = pygame.mixer.Sound("music/dig_sound.wav")
+    step_sound = pygame.mixer.Sound('music/step_sound.wav')
+    door_sound = pygame.mixer.Sound('music/door_sound.wav')
     while True:
         CLOCK.tick_busy_loop(60)
         pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
@@ -70,7 +75,14 @@ def main():
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
-                        level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
+                        if level.dungeon.grid[player.pos[0]][player.pos[1]].type == 'earth':
+                            pygame.mixer.Sound.play(dig_sound)
+                            level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
+                        else:
+                            pygame.mixer.Sound.play(step_sound)
+                    else:
+                        pygame.mixer.Sound.play(door_sound)
+
                     camera.move_to(*player.pos)
 
             elif event.type == pygame.MOUSEWHEEL:

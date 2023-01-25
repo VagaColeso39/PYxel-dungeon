@@ -88,7 +88,7 @@ class DoorTile(Tile):
         self.opened = False
         self.gases &= self.opened  # link to `opened` because they must have same values
         self.effects = []
-    
+
     def add_effect(self, effect):
         if effect not in self.efects:
             self.effects.append(effect)
@@ -99,6 +99,7 @@ class DoorTile(Tile):
         self.effects.pop(self.effects.index(effect))
     
     def step(self, reason):
-        self.opened = True
+        if not self.opened:
+            self.opened = True
 
 

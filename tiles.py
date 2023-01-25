@@ -3,9 +3,6 @@ from typing import Literal
 import os
 from typing_extensions import Self
 
-tiles_sprites = pygame.sprite.Group()
-layers = pygame.sprite.LayeredUpdates()
-
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'earth', 'door']):

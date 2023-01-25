@@ -1,10 +1,17 @@
 import bags
+import pygame
 from tiles import Tile
 from util import *
 
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, start_pos: list[int, int]):
+        self.source = pygame.image.load('sprites/player.png')
+        self.image = pygame.transform.scale(self.source, (20, 20))
+        self.rect = self.image.get_rect()
+        self.rect.center = (start_pos[0] * 20, start_pos[1] * 20)
+        self._layer = 1
+
         self.pos = start_pos
         self.backpack = bags.Backpack(self)
         self.vision_field = 6
@@ -14,8 +21,6 @@ class Player:
         self.artifact = None
         self.ring = None
         self.ring_or_artifact = None
-        self.max_hp = 20
-        self.hp = 20
         self.xp = 0
         self.level = 1
         self.next_level = 10
@@ -32,6 +37,9 @@ class Player:
         self.walking_speed_multipliers = []
         self.attack_speed_multipliers = []
         self.keys = 100  # FIX
+
+        self.max_hp = 20
+        self.hp = 15
 
     def hit_hero(self, damage):
         self.hp -= damage

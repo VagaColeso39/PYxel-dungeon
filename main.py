@@ -3,9 +3,11 @@ import sys
 import pygame
 from player import Player
 from level import Level
-from tiles import WallTile, DoorTile, EarthTile, FloorTile, tiles_sprites, layers
+from tiles import WallTile, DoorTile, EarthTile, FloorTile
 from camera import Camera
 from constants_original import *
+layers = pygame.sprite.LayeredUpdates()
+entities_sprites = pygame.sprite.Group()
 
 multiplier = random.randint(55, 60)
 chance_for_door = 100
@@ -20,6 +22,7 @@ SCREEN.fill(EMPTY_COLOR)
 
 def main():
     player = Player(start_pos=level.start_pos)
+
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
     camera = Camera(player, level, SCREEN)
@@ -27,6 +30,7 @@ def main():
     print(player.pos)
     mouse_pos = (0, 0)
     current_x, current_y = 0, 0
+    mouse_pos = None
     while True:
         CLOCK.tick_busy_loop(60)
         pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
@@ -43,19 +47,27 @@ def main():
                 if event.key == pygame.K_UP:
                     if player.pos[1] > 0 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] - 1):
                         player.pos[1] -= 1
+                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
                         moved = True
+
                 elif event.key == pygame.K_DOWN:
                     if player.pos[1] < level.level_height - 1 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] + 1):
                         player.pos[1] += 1
+                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
                         moved = True
+
                 elif event.key == pygame.K_LEFT:
-                    if player.pos[0] > 0 and player.try_move(level.dungeon.grid, player.pos[0] - 1, player.pos[1] ):
+                    if player.pos[0] > 0 and player.try_move(level.dungeon.grid, player.pos[0] - 1, player.pos[1]):
                         player.pos[0] -= 1
+                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
                         moved = True
+
                 elif event.key == pygame.K_RIGHT:
                     if player.pos[0] < level.level_width - 1 and player.try_move(level.dungeon.grid, player.pos[0] + 1, player.pos[1]):
                         player.pos[0] += 1
+                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
                         moved = True
+
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
                         level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
@@ -80,6 +92,7 @@ def main():
                 y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
                 camera.move_to(x, y, 'point')
 
+                mouse_pos = pygame.mouse.get_pos()
         layers.draw(SCREEN)
         pygame.display.update()
 

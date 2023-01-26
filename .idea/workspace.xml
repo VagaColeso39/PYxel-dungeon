@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="fixed bug with two fields of view (in dungeon generator) + QoL">
-      <change afterPath="$PROJECT_DIR$/music/dig_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/music/door_sound.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/music/main_theme.wav" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/music/step_sound.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/tiles.py" afterDir="false" />
-    </list>
+    <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="fixed bug with two fields of view (in dungeon generator) + QoL" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

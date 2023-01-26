@@ -96,20 +96,17 @@ def main():
                 current_x, current_y = camera.cx, camera.cy
             
             if pygame.mouse.get_pressed()[0]:
-                '''x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])
                 y = camera.cy + 5 * (mouse_pos[1] - pygame.mouse.get_pos()[1])
                 camera.move_to(x, y, 'point')
-                mouse_pos = pygame.mouse.get_pos()'''
-                x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                mouse_pos = pygame.mouse.get_pos()
+                '''x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
                 y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
-                camera.move_to(x, y, 'point')
+                camera.move_to(x, y, 'point')'''
 
                 mouse_pos = pygame.mouse.get_pos()
         layers.draw(SCREEN)
         pygame.display.update()
-
-
-
 
 
 if __name__ == "__main__":

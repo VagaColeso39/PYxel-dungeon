@@ -31,6 +31,7 @@ def main():
     current_x, current_y = 0, 0
     mouse_pos = None
     dragging = 0
+    running = False
 
     pygame.mixer.music.load('music/main_theme.wav')
     pygame.mixer.music.play(-1)
@@ -98,15 +99,10 @@ def main():
                 current_x, current_y = camera.cx, camera.cy
             
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                if dragging != 1:
-                    dragging = 0
-                else:
-                    while True:
-                        if not player.move(*camera.get_cell(*mouse_pos), level.maze):
-                            break
-                        camera.drawGrid()
-                        pygame.time.delay(100)
-                    dragging = 0
+                if dragging == 1:
+                    running = True
+                    camera.move_to(*camera.get_cell(*mouse_pos))
+                dragging = 0                  
             
             if pygame.mouse.get_pressed()[0]:
                 dragging += 1
@@ -117,6 +113,10 @@ def main():
                 x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
                 y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
                 camera.move_to(x, y, 'point')
+        if running:
+            if not player.move(*camera.get_cell(*mouse_pos), level.maze):
+                running = False
+            pygame.time.delay(80)
         layers.draw(SCREEN)
         pygame.display.update()
 

@@ -75,8 +75,11 @@ class Player(pygame.sprite.Sprite):
     def move(self, x, y, maze):
         if len(self.path) == 0:
             self.path = astar(maze, tuple(self.pos), (x, y))
+        if self.path is None:
+            self.path = []
+            return False
         print(self.path)
-        self.pos = self.path.pop(0)
+        self.pos = list(self.path.pop(0))
         if len(self.path) == 0:
             return False
         return True

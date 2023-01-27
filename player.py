@@ -1,7 +1,9 @@
 import bags
 import pygame
 from tiles import Tile
-from util import *
+from utils.algorithms import *
+from utils.astar import astar
+from pprint import pprint
 
 
 class Player(pygame.sprite.Sprite):
@@ -67,3 +69,7 @@ class Player(pygame.sprite.Sprite):
 
         if grid[x][y].type not in ['wall', 'void']:
             return True
+    
+    def move_to_cell(self, x, y, maze):
+        path = astar(maze, self.pos, (x, y))
+        print(path, self.pos, (x, y))

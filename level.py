@@ -46,3 +46,16 @@ class Level:
 
     def next_move(self, action):
         pass
+
+    @property
+    def maze(self):
+        maze = []
+        for row in range(self.level_height):
+            line = []
+            for cell in range(self.level_width):
+                if self.dungeon.grid[row][cell].type != 'wall' and (self.dungeon.grid[row][cell].explored or self.dungeon.grid[row][cell].visible):
+                    line.append(1)
+                else:
+                    line.append(0)
+            maze.append(line)
+        return maze

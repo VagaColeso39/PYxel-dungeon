@@ -3,7 +3,7 @@ from player import Player
 from level import Level
 from constants_original import *
 from typing import Literal
-from helpful.easing import CubicEaseOut
+from utils.easing import CubicEaseOut
 
 
 class Camera:
@@ -112,3 +112,5 @@ class Camera:
             self.multiplier = num
             self.block_size = int(self.dft_block_size * self.multiplier)
         self.move_to(self.cx, self.cy, 'point')
+    def get_cell(self, x, y):
+        return (x + self.tl_x) // self.block_size, (y + self.tl_y) // self.block_size

@@ -71,5 +71,5 @@ class Player(pygame.sprite.Sprite):
             return True
     
     def move_to_cell(self, x, y, maze):
-        path = astar(maze, self.pos, (x, y))
+        path = astar(maze, tuple(self.pos), (x, y))
         print(path, self.pos, (x, y))

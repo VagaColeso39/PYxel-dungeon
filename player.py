@@ -1,3 +1,4 @@
+from typing import Literal
 import bags
 import pygame
 from tiles import Tile
@@ -38,6 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_multipliers = []
         self.walking_speed_multipliers = []
         self.attack_speed_multipliers = []
+        self.path = []
         self.keys = 100  # FIX
 
         self.max_hp = 20
@@ -70,6 +72,12 @@ class Player(pygame.sprite.Sprite):
         if grid[x][y].type not in ['wall', 'void']:
             return True
     
-    def move_to_cell(self, x, y, maze):
-        path = astar(maze, tuple(self.pos), (x, y))
-        print(path, self.pos, (x, y))
+    def move(self, x, y, maze):
+        if len(self.path) == 0:
+            self.path = astar(maze, tuple(self.pos), (x, y))
+        print(self.path)
+        self.pos = self.path.pop(0)
+        if len(self.path) == 0:
+            return False
+        return True
+    

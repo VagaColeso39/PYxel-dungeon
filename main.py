@@ -93,7 +93,7 @@ def main():
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
             
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                
+
                 mouse_pos = pygame.mouse.get_pos()
                 current_x, current_y = camera.cx, camera.cy
             
@@ -101,7 +101,11 @@ def main():
                 if dragging != 1:
                     dragging = 0
                 else:
-                    player.move_to_cell(*camera.get_cell(*mouse_pos), level.maze)
+                    while True:
+                        if not player.move(*camera.get_cell(*mouse_pos), level.maze):
+                            break
+                        camera.drawGrid()
+                        pygame.time.delay(100)
                     dragging = 0
             
             if pygame.mouse.get_pressed()[0]:

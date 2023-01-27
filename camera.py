@@ -58,20 +58,21 @@ class Camera:
 
                 if self.player.pos[0] == x and self.player.pos[1] == y:
                     color = PLAYER_COLOR
-
-                    hp_bar = pygame.Rect(10, 10, int(400 * (self.player.hp / self.player.max_hp).__round__(2)), 15)
-                    hp_bar_missing = pygame.Rect(10, 10, 400, 15)
-                    pygame.draw.rect(self.screen, HP_BAR_COLOR_MISSING, hp_bar_missing)
-                    pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar_missing, 2)
-                    pygame.draw.rect(self.screen, HP_BAR_COLOR, hp_bar)
-                    pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar, 2)
-
-
+                
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
                 pygame.draw.rect(self.screen, color, cell)
                 if color not in [PLAYER_COLOR, EMPTY_COLOR]:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
+
+        hp_bar = pygame.Rect(10, 10, int(400 * (self.player.hp / self.player.max_hp).__round__(2)), 15)
+        hp_bar_missing = pygame.Rect(10, 10, 400, 15)
+        pygame.draw.rect(self.screen, HP_BAR_COLOR_MISSING, hp_bar_missing)
+        pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar_missing, 2)
+        pygame.draw.rect(self.screen, HP_BAR_COLOR, hp_bar)
+        pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar, 2)
+
+                
         text = self.f1.render(f"{self.player.hp}/{self.player.max_hp}", True, HP_BAR_COLOR)
         self.screen.blit(text, (410, 10))
         self._next_frame_easing()  # call in the end

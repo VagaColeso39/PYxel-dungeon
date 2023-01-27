@@ -3,6 +3,7 @@ from player import Player
 from level import Level
 from constants_original import *
 from typing import Literal
+from helpful.easing import CubicEaseOut
 
 
 class Camera:
@@ -21,6 +22,7 @@ class Camera:
         self.block_size = self.dft_block_size
         self.min_block_size = 10
         self.max_block_size = 100
+        self.easing = CubicEaseOut(0, 1, self.strength)
 
         self.f1 = pygame.font.Font(None, 25)
 
@@ -72,7 +74,7 @@ class Camera:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
         text = self.f1.render(f"{self.player.hp}/{self.player.max_hp}", True, HP_BAR_COLOR)
         self.screen.blit(text, (410, 10))
-        self._next_frame()  # call in the end
+        self._next_frame_easing()  # call in the end
 
     @property
     def tl_x(self):
@@ -81,6 +83,11 @@ class Camera:
     @property
     def tl_y(self):
         return self.cy - self.screen.get_size()[1] // 2
+
+    def _next_frame_easing(self):
+        if self.frames_skipped != self.strength:
+            self.cx = self.cx + int((self.to_x - self.cx) * self.easing.ease(self.frames_skipped + 1))
+            self.cy = self.cy + int((self.to_y - self.cy) * self.easing.ease(self.frames_skipped + 1))
 
     def _next_frame(self):
         if self.frames_skipped != self.strength:

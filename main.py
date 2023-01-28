@@ -21,7 +21,7 @@ SCREEN.fill(EMPTY_COLOR)
 
 
 def main():
-    player = Player(start_pos=level.start_pos)
+    player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
 
     player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
@@ -52,28 +52,13 @@ def main():
                     sys.exit()
                 moved = False
                 if event.key == pygame.K_UP:
-                    if player.pos[1] > 0 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] - 1):
-                        player.pos[1] -= 1
-                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
-                        moved = True
-
+                        moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] - 1], 'y-', block_size)
                 elif event.key == pygame.K_DOWN:
-                    if player.pos[1] < level.level_height - 1 and player.try_move(level.dungeon.grid, player.pos[0], player.pos[1] + 1):
-                        player.pos[1] += 1
-                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
-                        moved = True
-
+                    moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] + 1], 'y+', block_size)
                 elif event.key == pygame.K_LEFT:
-                    if player.pos[0] > 0 and player.try_move(level.dungeon.grid, player.pos[0] - 1, player.pos[1]):
-                        player.pos[0] -= 1
-                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
-                        moved = True
-
+                    moved = player.move_step(level.dungeon.grid[player.pos[0] - 1][player.pos[1]], 'x-', block_size)
                 elif event.key == pygame.K_RIGHT:
-                    if player.pos[0] < level.level_width - 1 and player.try_move(level.dungeon.grid, player.pos[0] + 1, player.pos[1]):
-                        player.pos[0] += 1
-                        player.rect.center = player.pos[0] * block_size, player.pos[1] * block_size
-                        moved = True
+                    moved = player.move_step(level.dungeon.grid[player.pos[0] + 1][player.pos[1]], 'x+', block_size)
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
@@ -110,13 +95,15 @@ def main():
                 y = camera.cy + 5 * (mouse_pos[1] - pygame.mouse.get_pos()[1])
                 camera.move_to(x, y, 'point')
                 mouse_pos = pygame.mouse.get_pos()'''
-                x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
-                y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
-                camera.move_to(x, y, 'point')
+
+                if mouse_pos is not None:
+                    x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                    y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
+                    camera.move_to(x, y, 'point')
         if running:
-            if not player.move(*camera.get_cell(*mouse_pos), level.maze):
+            if not player.move(*camera.get_cell(*mouse_pos), level.maze, block_size):
                 running = False
-            pygame.time.delay(80)
+            pygame.time.delay(30)
         layers.draw(SCREEN)
         pygame.display.update()
 

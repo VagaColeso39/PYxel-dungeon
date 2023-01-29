@@ -104,9 +104,16 @@ def main():
                     y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
                     camera.move_to(x, y, 'point')
         if running:
+            x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
+            y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
+            camera.move_to(x, y, 'point')
             if not player.move(*camera.get_cell(*mouse_pos), level.maze, block_size):
                 running = False
-            pygame.time.delay(30)
+            else:
+                for enemy in level.all_enemies:
+                    enemy.turn(level.dungeon.grid, level.dungeon.grid[player.pos[0]][player.pos[1]], player, level.maze,
+                               block_size)
+            pygame.time.delay(random.randint(70, 100))
         entities_sprites.update()
         entities_sprites.draw(SCREEN)
         pygame.display.update()

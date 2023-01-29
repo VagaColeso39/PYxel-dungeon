@@ -1,5 +1,6 @@
 import dungeonGenerator
 import random
+from enemies import Enemy
 
 
 class Level:
@@ -26,6 +27,7 @@ class Level:
         self.start_pos = start_pos
         self.board = None
         self.block_size = block_size
+        self.all_enemies = []
 
         self.level_width = int(7.4 * self.multiplier / 10)
         self.level_height = int(7.4 * self.multiplier / 10)
@@ -44,8 +46,10 @@ class Level:
         self.start_room = self.dungeon.rooms[0]
         self.start_pos = [self.start_room.x + self.start_room.width // 2, self.start_room.y + self.start_room.height // 2]
 
-    def next_move(self, action):
-        pass
+        for i in range(1, self.room_amount - self.closed_rooms_amount - 1):
+            x = random.choice((self.dungeon.rooms[i].x, self.dungeon.rooms[i].x + self.dungeon.rooms[i].width))
+            y = random.choice((self.dungeon.rooms[i].y, self.dungeon.rooms[i].y + self.dungeon.rooms[i].height))
+            self.all_enemies.append(Enemy(x=x, y=y))
 
     @property
     def maze(self):

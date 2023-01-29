@@ -1,7 +1,7 @@
-import pygame
 from typing import Literal
-import os
 from typing_extensions import Self
+
+import pygame
 
 
 class Tile(pygame.sprite.Sprite):
@@ -17,7 +17,7 @@ class Tile(pygame.sprite.Sprite):
         self.fire = True
         self.can_burn = True  # i can't think of anything better
 
-    def change_tile(self, tile_class:Self):
+    def change_tile(self, tile_class: Self):
         return tile_class(self.dungeon, self.x, self.y)
 
 
@@ -31,16 +31,16 @@ class FloorTile(Tile):
         if modificator == 'trap':
             self.trap = trap
         self.effects = []
-    
+
     def add_effect(self, effect):
         if effect not in self.effects:
             self.effects.append(effect)
         else:
-            raise ValueError('This effect already exists') # update duration of effect ex: fire
-    
+            raise ValueError('This effect already exists')  # update duration of effect ex: fire
+
     def del_effect(self, effect):
         self.effects.pop(self.effects.index(effect))
-    
+
     def step(self, reason):
         if reason.__class__.__name__ == 'Item':
             self.inventory.append(reason)
@@ -49,7 +49,7 @@ class FloorTile(Tile):
         if self.modificator == 'high_grass':
             self.modificator = 'low_grass'
             self.grass_step()
-    
+
     def grass_step(self):
         pass
 
@@ -67,16 +67,16 @@ class EarthTile(Tile):
         super().__init__(dungeon, x, y, type='earth')
         self.fire = False
         self.effects = []
-    
+
     def add_effect(self, effect):
         if effect not in self.efects:
             self.effects.append(effect)
         else:
             raise ValueError('This effect already exists')
-    
+
     def del_effect(self, effect):
         self.effects.pop(self.effects.index(effect))
-    
+
     def step(self, reason):
         pass  # i need level logic to make it
 
@@ -94,12 +94,10 @@ class DoorTile(Tile):
             self.effects.append(effect)
         else:
             raise ValueError('This effect already exists')  # same, need to update effect duration
-    
+
     def del_effect(self, effect):
         self.effects.pop(self.effects.index(effect))
-    
+
     def step(self, reason):
         if not self.opened:
             self.opened = True
-
-

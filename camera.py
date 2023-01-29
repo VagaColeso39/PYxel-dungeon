@@ -58,11 +58,13 @@ class Camera:
 
                 if self.player.pos[0] == x and self.player.pos[1] == y:
                     color = PLAYER_COLOR
-                
+                for enemy in self.level.all_enemies:
+                    if enemy.x == x and enemy.y == y:
+                        color = ENEMY_COLOR
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
                 pygame.draw.rect(self.screen, color, cell)
-                if color not in [PLAYER_COLOR, EMPTY_COLOR]:
+                if color not in [PLAYER_COLOR, EMPTY_COLOR, ENEMY_COLOR]:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
 
         hp_bar = pygame.Rect(10, 10, int(400 * (self.player.hp / self.player.max_hp).__round__(2)), 15)

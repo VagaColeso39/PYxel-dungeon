@@ -51,17 +51,14 @@ def main():
                     pygame.quit()
                     sys.exit()
                 moved = False
-                try:
-                    if event.key == pygame.K_UP and player.pos[1] > 0:
-                            moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] - 1], 'y-', block_size)
-                    elif event.key == pygame.K_DOWN and player.pos[1] < level.level_height - 1:
-                        moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] + 1], 'y+', block_size)
-                    elif event.key == pygame.K_LEFT and player.pos[0] > 0:
-                        moved = player.move_step(level.dungeon.grid[player.pos[0] - 1][player.pos[1]], 'x-', block_size)
-                    elif event.key == pygame.K_RIGHT and player.pos[0] < player.level_width - 1:
-                        moved = player.move_step(level.dungeon.grid[player.pos[0] + 1][player.pos[1]], 'x+', block_size)
-                except IndexError:
-                    print([player.pos[0] + 1], [player.pos[1]])
+                if event.key == pygame.K_UP and player.pos[1] > 0:
+                        moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] - 1], 'y-', block_size)
+                elif event.key == pygame.K_DOWN and player.pos[1] < level.level_height - 1:
+                    moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] + 1], 'y+', block_size)
+                elif event.key == pygame.K_LEFT and player.pos[0] > 0:
+                    moved = player.move_step(level.dungeon.grid[player.pos[0] - 1][player.pos[1]], 'x-', block_size)
+                elif event.key == pygame.K_RIGHT and player.pos[0] < player.level_width - 1:
+                    moved = player.move_step(level.dungeon.grid[player.pos[0] + 1][player.pos[1]], 'x+', block_size)
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
@@ -74,24 +71,26 @@ def main():
                         pygame.mixer.Sound.play(door_sound)
 
                     camera.move_to(*player.pos)
+                    for enemy in level.all_enemies:
+                        enemy.turn(level.dungeon.grid, level.dungeon.grid[player.pos[0]][player.pos[1]], player, level.maze, block_size)
 
             elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
                     camera.set_size(camera.multiplier + 0.1, 'multiplier')
                 else:
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
-            
+
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
                 mouse_pos = pygame.mouse.get_pos()
                 current_x, current_y = camera.cx, camera.cy
-            
+
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if dragging == 1:
                     running = True
                     camera.move_to(*camera.get_cell(*mouse_pos))
-                dragging = 0                  
-            
+                dragging = 0
+
             if pygame.mouse.get_pressed()[0]:
                 dragging += 1
                 '''x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])

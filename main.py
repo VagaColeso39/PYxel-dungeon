@@ -1,11 +1,13 @@
 import random
 import sys
 import pygame
+pygame.init()
 from player import Player
 from level import Level
 from tiles import WallTile, DoorTile, EarthTile, FloorTile
 from camera import Camera
 from constants_original import *
+from utils.sounds import *
 layers = pygame.sprite.LayeredUpdates()
 entities_sprites = pygame.sprite.Group()
 
@@ -14,8 +16,7 @@ chance_for_door = 100
 block_size = 20
 level = Level(multiplier, chance_for_door, 1, block_size)
 
-pygame.init()
-SCREEN = pygame.display.set_mode((level.level_width * block_size, level.level_height * block_size))
+SCREEN = pygame.display.set_mode((500, 500))
 CLOCK = pygame.time.Clock()
 SCREEN.fill(EMPTY_COLOR)
 
@@ -33,11 +34,11 @@ def main():
     dragging = 0
     running = False
 
+    entities_sprites.add(player)
+
     pygame.mixer.music.load('music/main_theme.wav')
     pygame.mixer.music.play(-1)
-    dig_sound = pygame.mixer.Sound("music/dig_sound.wav")
-    step_sound = pygame.mixer.Sound('music/step_sound.wav')
-    door_sound = pygame.mixer.Sound('music/door_sound.wav')
+    
     while True:
         CLOCK.tick_busy_loop(60)
         pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
@@ -51,6 +52,7 @@ def main():
                     pygame.quit()
                     sys.exit()
                 moved = False
+<<<<<<< Updated upstream
                 if event.key == pygame.K_UP and player.pos[1] > 0:
                         moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] - 1], 'y-', block_size)
                 elif event.key == pygame.K_DOWN and player.pos[1] < level.level_height - 1:
@@ -59,6 +61,16 @@ def main():
                     moved = player.move_step(level.dungeon.grid[player.pos[0] - 1][player.pos[1]], 'x-', block_size)
                 elif event.key == pygame.K_RIGHT and player.pos[0] < player.level_width - 1:
                     moved = player.move_step(level.dungeon.grid[player.pos[0] + 1][player.pos[1]], 'x+', block_size)
+=======
+                if event.key == pygame.K_UP:
+                    moved = player.move_step((player.pos[0], player.pos[1] - 1), 'y-', block_size)
+                elif event.key == pygame.K_DOWN:
+                    moved = player.move_step((player.pos[0], player.pos[1] + 1), 'y+', block_size)
+                elif event.key == pygame.K_LEFT:
+                    moved = player.move_step((player.pos[0] - 1, player.pos[1]), 'x-', block_size)
+                elif event.key == pygame.K_RIGHT:
+                    moved = player.move_step((player.pos[0] + 1, player.pos[1]), 'x+', block_size)
+>>>>>>> Stashed changes
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
@@ -105,11 +117,17 @@ def main():
         if running:
             if not player.move(*camera.get_cell(*mouse_pos), level.maze, block_size):
                 running = False
+<<<<<<< Updated upstream
             x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
             y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
             camera.move_to(x, y, 'point')
             pygame.time.delay(random.randint(70, 120))
         layers.draw(SCREEN)
+=======
+            pygame.time.delay(30)
+        entities_sprites.update()
+        entities_sprites.draw(SCREEN)
+>>>>>>> Stashed changes
         pygame.display.update()
 
 

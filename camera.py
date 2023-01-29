@@ -30,6 +30,7 @@ class Camera:
         self.screen.fill(EMPTY_COLOR)
         for x in range(0, self.level.level_width):
             for y in range(0, self.level.level_height):
+                
                 color = EARTH_COLOR
                 if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
                     self.level.dungeon.grid[x][y].visible = True
@@ -55,17 +56,23 @@ class Camera:
                         color = WALL_COLOR_FADED
                 else:
                     color = EMPTY_COLOR
+<<<<<<< Updated upstream
 
                 if self.player.pos[0] == x and self.player.pos[1] == y:
                     color = PLAYER_COLOR
                 for enemy in self.level.all_enemies:
                     if enemy.x == x and enemy.y == y:
                         color = ENEMY_COLOR
+=======
+                    
+                
+>>>>>>> Stashed changes
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
                 pygame.draw.rect(self.screen, color, cell)
                 if color not in [PLAYER_COLOR, EMPTY_COLOR, ENEMY_COLOR]:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
+                
 
         hp_bar = pygame.Rect(10, 10, int(400 * (self.player.hp / self.player.max_hp).__round__(2)), 15)
         hp_bar_missing = pygame.Rect(10, 10, 400, 15)
@@ -73,8 +80,7 @@ class Camera:
         pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar_missing, 2)
         pygame.draw.rect(self.screen, HP_BAR_COLOR, hp_bar)
         pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar, 2)
-
-                
+        self.player.rect.center = (int(self.player.pos[0] * self.block_size - self.tl_x + self.block_size // 2), int(self.player.pos[1] * self.block_size - self.tl_y + self.block_size // 2))
         text = self.f1.render(f"{self.player.hp}/{self.player.max_hp}", True, HP_BAR_COLOR)
         self.screen.blit(text, (410, 10))
         self._next_frame_easing()  # call in the end

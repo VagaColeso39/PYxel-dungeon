@@ -1,13 +1,18 @@
 import pygame
 
 import bags
-from tiles import Tile
+from tiles import Tile, FloorTile
 from utils.algorithms import *
 from utils.astar import astar
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, start_pos: list[int, int], level_width, level_height, grid):
+        pygame.mixer.init()
+        self.dig_sound = pygame.mixer.Sound("music/dig_sound.wav")
+        self.step_sound = pygame.mixer.Sound('music/step_sound.wav')
+        self.door_sound = pygame.mixer.Sound('music/door_sound.wav')
+
         self.source = pygame.image.load('sprites/player.png')
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
@@ -76,24 +81,23 @@ class Player(pygame.sprite.Sprite):
             return True
 
     def move_step(self, cell: object, direction: str = 'x+', block_size: int = 20):
-        if direction == 'x-' and self.pos[0] > 0 and self.try_move(cell):
+        if direction == 'x-' and self.try_move(cell):
             self.pos[0] -= 1
             self.rect.center = self.pos[0] * block_size, self.pos[1] * block_size
             return True
-        elif direction == 'x+' and self.pos[0] < self.level_width - 1 and self.try_move(cell):
+        elif direction == 'x+' and self.try_move(cell):
             self.pos[0] += 1
             self.rect.center = self.pos[0] * block_size, self.pos[1] * block_size
             return True
-        elif direction == 'y-' and self.pos[1] > 0 and self.try_move(cell):
+        elif direction == 'y-' and self.try_move(cell):
             self.pos[1] -= 1
             self.rect.center = self.pos[0] * block_size, self.pos[1] * block_size
             return True
-        elif direction == 'y+' and self.pos[1] < self.level_height - 1 and self.try_move(cell):
+        elif direction == 'y+'  and self.try_move(cell):
             self.pos[1] += 1
             self.rect.center = self.pos[0] * block_size, self.pos[1] * block_size
             return True
         return False
-
 
     def move(self, x, y, maze, block_size):
         if len(self.path) == 0:
@@ -102,14 +106,23 @@ class Player(pygame.sprite.Sprite):
             self.path = []
             return False
         move_to = list(self.path.pop(0))
+        cell = self.grid[move_to[0]][move_to[1]]
         if self.pos[0] > move_to[0]:
-            self.move_step(self.grid[move_to[0]][move_to[1]], 'x-', block_size)
+            self.move_step(cell, 'x-', block_size)
         elif self.pos[0] < move_to[0]:
-            self.move_step(self.grid[move_to[0]][move_to[1]], 'x+', block_size)
+            self.move_step(cell, 'x+', block_size)
         elif self.pos[1] > move_to[1]:
-            self.move_step(self.grid[move_to[0]][move_to[1]], 'y-', block_size)
+            self.move_step(cell, 'y-', block_size)
         elif self.pos[1] < move_to[1]:
-            self.move_step(self.grid[move_to[0]][move_to[1]], 'y+', block_size)
+            self.move_step(cell, 'y+', block_size)
+        if cell.type != 'door':
+            if cell.type == 'earth':
+                pygame.mixer.Sound.play(self.dig_sound)
+                self.grid[move_to[0]][move_to[1]] = cell.change_tile(FloorTile)
+            else:
+                pygame.mixer.Sound.play(self.step_sound)
+        else:
+            pygame.mixer.Sound.play(self.door_sound)
 
         if len(self.path) == 0:
             return False

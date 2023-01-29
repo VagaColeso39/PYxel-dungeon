@@ -51,14 +51,17 @@ def main():
                     pygame.quit()
                     sys.exit()
                 moved = False
-                if event.key == pygame.K_UP:
-                        moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] - 1], 'y-', block_size)
-                elif event.key == pygame.K_DOWN:
-                    moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] + 1], 'y+', block_size)
-                elif event.key == pygame.K_LEFT:
-                    moved = player.move_step(level.dungeon.grid[player.pos[0] - 1][player.pos[1]], 'x-', block_size)
-                elif event.key == pygame.K_RIGHT:
-                    moved = player.move_step(level.dungeon.grid[player.pos[0] + 1][player.pos[1]], 'x+', block_size)
+                try:
+                    if event.key == pygame.K_UP and player.pos[1] > 0:
+                            moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] - 1], 'y-', block_size)
+                    elif event.key == pygame.K_DOWN and player.pos[1] < level.level_height - 1:
+                        moved = player.move_step(level.dungeon.grid[player.pos[0]][player.pos[1] + 1], 'y+', block_size)
+                    elif event.key == pygame.K_LEFT and player.pos[0] > 0:
+                        moved = player.move_step(level.dungeon.grid[player.pos[0] - 1][player.pos[1]], 'x-', block_size)
+                    elif event.key == pygame.K_RIGHT and player.pos[0] < player.level_width - 1:
+                        moved = player.move_step(level.dungeon.grid[player.pos[0] + 1][player.pos[1]], 'x+', block_size)
+                except IndexError:
+                    print([player.pos[0] + 1], [player.pos[1]])
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
@@ -103,7 +106,10 @@ def main():
         if running:
             if not player.move(*camera.get_cell(*mouse_pos), level.maze, block_size):
                 running = False
-            pygame.time.delay(30)
+            x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
+            y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
+            camera.move_to(x, y, 'point')
+            pygame.time.delay(random.randint(70, 120))
         layers.draw(SCREEN)
         pygame.display.update()
 

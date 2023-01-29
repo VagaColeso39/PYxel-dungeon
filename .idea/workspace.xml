@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="camera fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TOTESTS.py" beforeDir="false" afterPath="$PROJECT_DIR$/TOTESTS.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
     </list>

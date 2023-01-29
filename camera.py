@@ -56,17 +56,12 @@ class Camera:
                         color = WALL_COLOR_FADED
                 else:
                     color = EMPTY_COLOR
-<<<<<<< Updated upstream
 
-                if self.player.pos[0] == x and self.player.pos[1] == y:
-                    color = PLAYER_COLOR
                 for enemy in self.level.all_enemies:
                     if enemy.x == x and enemy.y == y:
                         color = ENEMY_COLOR
-=======
                     
                 
->>>>>>> Stashed changes
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
                 pygame.draw.rect(self.screen, color, cell)

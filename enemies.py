@@ -45,6 +45,7 @@ class Enemy(pygame.sprite.Sprite):
 
         if cell.type != 'wall':
             return True
+        return False
 
     def move_step(self, cell: object, direction: str = 'x+', block_size: int = 20, player: object = None):
         if direction == 'x-' and self.try_move(cell):

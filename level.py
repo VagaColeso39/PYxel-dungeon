@@ -47,9 +47,11 @@ class Level:
         self.start_pos = [self.start_room.x + self.start_room.width // 2, self.start_room.y + self.start_room.height // 2]
 
         for i in range(1, self.room_amount - self.closed_rooms_amount - 1):
-            x = random.choice((self.dungeon.rooms[i].x, self.dungeon.rooms[i].x + self.dungeon.rooms[i].width))
-            y = random.choice((self.dungeon.rooms[i].y, self.dungeon.rooms[i].y + self.dungeon.rooms[i].height))
-            self.all_enemies.append(Enemy(x=x, y=y))
+            x = random.randint(self.dungeon.rooms[i].x + 1, self.dungeon.rooms[i].x + self.dungeon.rooms[i].width - 1)
+            y = random.randint(self.dungeon.rooms[i].y + 1, self.dungeon.rooms[i].y + self.dungeon.rooms[i].height - 1)
+            enemy = Enemy(x=x, y=y)
+            self.all_enemies.append(enemy)
+            self.dungeon.grid[x][y].contains.append(enemy)
 
     @property
     def maze(self):

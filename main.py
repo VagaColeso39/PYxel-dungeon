@@ -60,6 +60,8 @@ def main():
                     moved = player.move_step((player.pos[0] - 1, player.pos[1]), 'x-', block_size)
                 elif event.key == pygame.K_RIGHT:
                     moved = player.move_step((player.pos[0] + 1, player.pos[1]), 'x+', block_size)
+                elif event.key == pygame.K_SPACE:
+                    moved = True
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
@@ -117,6 +119,10 @@ def main():
         entities_sprites.update()
         entities_sprites.draw(SCREEN)
         pygame.display.update()
+
+        if player.hp <= 0:
+            print("GAME OVER")
+            break
 
 
 if __name__ == "__main__":

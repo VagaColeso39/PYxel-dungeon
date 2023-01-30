@@ -42,6 +42,9 @@ class Camera:
                         color = DOOR_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'wall':
                         color = WALL_COLOR
+                    for enemy in self.level.all_enemies:
+                        if enemy.x == x and enemy.y == y:
+                            color = ENEMY_COLOR
 
                 elif self.level.dungeon.grid[x][y].visible or self.level.dungeon.grid[x][y].explored:
                     self.level.dungeon.grid[x][y].explored = True
@@ -56,11 +59,6 @@ class Camera:
                         color = WALL_COLOR_FADED
                 else:
                     color = EMPTY_COLOR
-
-                for enemy in self.level.all_enemies:
-                    if enemy.x == x and enemy.y == y:
-                        color = ENEMY_COLOR
-                    
                 
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
@@ -75,6 +73,7 @@ class Camera:
         pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar_missing, 2)
         pygame.draw.rect(self.screen, HP_BAR_COLOR, hp_bar)
         pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar, 2)
+        self.player.image = pygame.transform.scale(self.player.source, (self.block_size, self.block_size))
         self.player.rect.center = (int(self.player.pos[0] * self.block_size - self.tl_x + self.block_size // 2), int(self.player.pos[1] * self.block_size - self.tl_y + self.block_size // 2))
         text = self.f1.render(f"{self.player.hp}/{self.player.max_hp}", True, HP_BAR_COLOR)
         self.screen.blit(text, (410, 10))

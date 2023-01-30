@@ -8,28 +8,40 @@ from utils.astar import astar
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat'):
+    def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat',
+                 xp_contains: int = 3):
         pygame.sprite.Sprite.__init__(self)
-        self.source = pygame.image.load('sprites/player.png') # enemy.png
+        self.source = pygame.image.load('sprites/player.png')  # enemy.png
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
         self.rect.center = (x * 20, y * 20)
         self._layer = 1
         self.hp = hp
-        self.vision_field = 5
+        self.vision_field = 6
         self.dmg = dmg
         self.name = name
+        self.xp_contains = xp_contains
         self.x = x
         self.y = y
 
     def attack(self, other):
-        other.hp -= random.randint(*self.dmg)
+        other.hit_hero(random.randint(*self.dmg))
+
+    def hit_self(self, other, damage, grid):
+        self.hp -= damage
+        if self.hp <= 0:
+            other.xp += self.xp_contains
+
+            grid[self.x][self.y].contains.remove(self)
 
     def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int):
         if self.is_visible(grid, player_cell):
-            self.move(player_cell.x, player_cell.y, maze, block_size, grid, player, player_cell)
+            if abs(self.x - player.pos[0]) + abs(self.y - player.pos[1]) <= 1:
+                self.attack(player)
+            else:
+                self.move(player_cell.x, player_cell.y, maze, block_size, grid, player, player_cell)
         else:
-            self.move_step(player_cell, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)
+            self.move_step(grid, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)
 
     def is_visible(self, grid: list, cell: Tile):
         if pifagor((self.x, self.y), (cell.x, cell.y)) <= self.vision_field:
@@ -40,57 +52,67 @@ class Enemy(pygame.sprite.Sprite):
         return False
 
     def try_move(self, cell):
-        if cell.type == 'door' and not cell.opened:
+        if (cell.type == 'door' and not cell.opened) or (cell.type == 'wall'):
             return False
+        return True
 
-        if cell.type != 'wall':
-            return True
-        return False
-
-    def move_step(self, cell: object, direction: str = 'x+', block_size: int = 20, player: object = None):
-        if direction == 'x-' and self.try_move(cell):
+    def move_step(self, grid: list, direction: str = 'x+', block_size: int = 20, player: object = None):
+        if direction == 'x-' and self.try_move(grid[self.x - 1][self.y]) and self.x > 0:
             if player.pos != (self.x - 1, self.y):
                 self.x -= 1
                 self.rect.center = self.x * block_size, self.y * block_size
+                grid[self.x][self.y].contains.append(self)
+                if self in grid[self.x + 1][self.y].contains:
+                    grid[self.x + 1][self.y].contains.remove(self)
             else:
                 self.attack(player)
-        elif direction == 'x+' and self.try_move(cell):
+        elif direction == 'x+' and self.x < len(grid) - 1 and self.try_move(grid[self.x + 1][self.y]):
             if player.pos != (self.x + 1, self.y):
                 self.x += 1
                 self.rect.center = self.x * block_size, self.y * block_size
+                grid[self.x][self.y].contains.append(self)
+                if self in grid[self.x - 1][self.y].contains:
+                    grid[self.x - 1][self.y].contains.remove(self)
             else:
                 self.attack(player)
-        elif direction == 'y-' and self.try_move(cell):
+        elif direction == 'y-' and self.try_move(grid[self.x][self.y - 1]) and self.y > 0:
             if player.pos != (self.x, self.y - 1):
                 self.y -= 1
                 self.rect.center = self.x * block_size, self.y * block_size
+                grid[self.x][self.y].contains.append(self)
+                if self in grid[self.x][self.y + 1].contains:
+                    grid[self.x][self.y + 1].contains.remove(self)
             else:
                 self.attack(player)
-        elif direction == 'y+' and self.try_move(cell):
+        elif direction == 'y+' and self.y < len(grid[0]) - 1 and self.try_move(grid[self.x][self.y + 1]):
             if player.pos != (self.x, self.y + 1):
                 self.y += 1
                 self.rect.center = self.x * block_size, self.y * block_size
+                grid[self.x][self.y].contains.append(self)
+                if self in grid[self.x][self.y - 1].contains:
+                    grid[self.x][self.y - 1].contains.remove(self)
             else:
                 self.attack(player)
-        else:
-            return False
+        if grid[self.x][self.y].type == 'earth':
+            grid[self.x][self.y] = grid[self.x][self.y].change_tile(FloorTile)
+
         return True
 
     def move(self, x, y, maze, block_size, grid, player, player_cell):
         path = astar(maze, (self.x, self.y), (x, y))
         if path is not None:
-            move_to = list(path.pop(0))
-            cell = grid[move_to[0]][move_to[1]]
-            if self.x > move_to[0]:
-                self.move_step(cell, 'x-', block_size, player)
-            elif self.x < move_to[0]:
-                self.move_step(cell, 'x+', block_size, player)
-            elif self.y > move_to[1]:
-                self.move_step(cell, 'y-', block_size, player)
-            elif self.y < move_to[1]:
-                self.move_step(cell, 'y+', block_size, player)
-            if cell.type == 'earth':
-                grid[move_to[0]][move_to[1]] = cell.change_tile(FloorTile)
+            if len(path) > 1:
+                move_to = list(path.pop(1))
+                cell = grid[move_to[0]][move_to[1]]
+                if self.x > move_to[0]:
+                    self.move_step(grid, 'x-', block_size, player)
+                elif self.x < move_to[0]:
+                    self.move_step(grid, 'x+', block_size, player)
+                elif self.y > move_to[1]:
+                    self.move_step(grid, 'y-', block_size, player)
+                elif self.y < move_to[1]:
+                    self.move_step(grid, 'y+', block_size, player)
+            else:
+                self.attack(player)
         else:
-            self.move_step(player_cell, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)
-
+            self.move_step(grid, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)

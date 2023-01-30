@@ -1,12 +1,14 @@
+import random
+
 import pygame
 
 import bags
-from tiles import Tile, FloorTile
+from tiles import FloorTile
+from tiles import Tile
 from utils.algorithms import *
 from utils.astar import astar
 from utils.sounds import *
-from tiles import FloorTile
-from constants_original import GREEN
+from enemies import Enemy
 
 
 class Player(pygame.sprite.Sprite):
@@ -67,6 +69,10 @@ class Player(pygame.sprite.Sprite):
         return False
 
     def try_move(self, cell):
+        for obj in cell.contains:
+            if type(obj) == Enemy:
+                obj.hit_self(self, random.randint(*self.weapon['damage']), self.grid)
+                return False
         if cell.type == 'door':
             if cell.modificator == 'closed':
                 if self.keys > 0:
@@ -79,9 +85,9 @@ class Player(pygame.sprite.Sprite):
         if cell.type not in ['wall', 'void']:
             return True
 
-    def move_step(self, pos:tuple[int, int], direction: str = 'x+', block_size: int = 20):
+    def move_step(self, pos: tuple[int, int], direction: str = 'x+', block_size: int = 20):
         moved = False
-        if not(0 <= pos[0] <= self.level_width) and not(0 <= pos[1] <= self.level_height):
+        if not (0 <= pos[0] <= self.level_width) and not (0 <= pos[1] <= self.level_height):
             return False
         if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[0] -= 1
@@ -103,7 +109,7 @@ class Player(pygame.sprite.Sprite):
                 pygame.mixer.Sound.play(step_sound)
         else:
             pygame.mixer.Sound.play(door_sound)
-        
+
         return moved
 
     def move(self, x, y, maze, block_size):

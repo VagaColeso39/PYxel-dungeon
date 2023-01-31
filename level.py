@@ -1,6 +1,7 @@
 import dungeonGenerator
 import random
 from enemies import Enemy
+import pygame
 
 
 class Level:
@@ -51,7 +52,6 @@ class Level:
             y = random.randint(self.dungeon.rooms[i].y + 1, self.dungeon.rooms[i].y + self.dungeon.rooms[i].height - 1)
             enemy = Enemy(x=x, y=y)
             self.all_enemies.append(enemy)
-            self.dungeon.grid[x][y].contains.append(enemy)
 
     @property
     def maze(self):

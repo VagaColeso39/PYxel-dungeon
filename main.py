@@ -1,13 +1,14 @@
 import random
 import sys
 import pygame
-pygame.init()
 from player import Player
 from level import Level
 from tiles import WallTile, DoorTile, EarthTile, FloorTile
 from camera import Camera
 from constants_original import *
 from utils.sounds import *
+
+pygame.init()
 layers = pygame.sprite.LayeredUpdates()
 entities_sprites = pygame.sprite.Group()
 
@@ -35,6 +36,8 @@ def main():
     running = False
 
     entities_sprites.add(player)
+    for enemy in level.all_enemies:
+        entities_sprites.add(enemy)
 
     pygame.mixer.music.load('music/main_theme.wav')
     pygame.mixer.music.play(-1)
@@ -53,13 +56,13 @@ def main():
                     sys.exit()
                 moved = False
                 if event.key == pygame.K_UP:
-                    moved = player.move_step((player.pos[0], player.pos[1] - 1), 'y-', block_size)
+                    moved = player.move_step((player.pos[0], player.pos[1] - 1), level.all_enemies, 'y-', block_size)
                 elif event.key == pygame.K_DOWN:
-                    moved = player.move_step((player.pos[0], player.pos[1] + 1), 'y+', block_size)
+                    moved = player.move_step((player.pos[0], player.pos[1] + 1), level.all_enemies, 'y+', block_size)
                 elif event.key == pygame.K_LEFT:
-                    moved = player.move_step((player.pos[0] - 1, player.pos[1]), 'x-', block_size)
+                    moved = player.move_step((player.pos[0] - 1, player.pos[1]), level.all_enemies, 'x-', block_size)
                 elif event.key == pygame.K_RIGHT:
-                    moved = player.move_step((player.pos[0] + 1, player.pos[1]), 'x+', block_size)
+                    moved = player.move_step((player.pos[0] + 1, player.pos[1]), level.all_enemies, 'x+', block_size)
                 elif event.key == pygame.K_SPACE:
                     moved = True
 

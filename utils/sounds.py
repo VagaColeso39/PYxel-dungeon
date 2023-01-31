@@ -1,5 +1,5 @@
 import pygame
-
+pygame.mixer.init()
 
 
 dig_sound = pygame.mixer.Sound("music/dig_sound.wav")

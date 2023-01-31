@@ -68,10 +68,10 @@ class Player(pygame.sprite.Sprite):
                 return True
         return False
 
-    def try_move(self, cell):
-        for obj in cell.contains:
-            if type(obj) == Enemy:
-                obj.hit_self(self, random.randint(*self.weapon['damage']), self.grid)
+    def try_move(self, cell, all_enemies):
+        for enemy in all_enemies:
+            if enemy.x == cell.x and enemy.y == cell.y:
+                enemy.hit_self(self, random.randint(*self.weapon['damage'], self.grid))
                 return False
         if cell.type == 'door':
             if cell.modificator == 'closed':
@@ -85,20 +85,20 @@ class Player(pygame.sprite.Sprite):
         if cell.type not in ['wall', 'void']:
             return True
 
-    def move_step(self, pos: tuple[int, int], direction: str = 'x+', block_size: int = 20):
+    def move_step(self, pos: tuple[int, int], all_enemies, direction: str = 'x+', block_size: int = 20):
         moved = False
         if not (0 <= pos[0] <= self.level_width) and not (0 <= pos[1] <= self.level_height):
             return False
-        if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
+        if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
             self.pos[0] -= 1
             moved = True
-        elif direction == 'x+' and self.pos[0] < self.level_width - 1 and self.try_move(self.grid[pos[0]][pos[1]]):
+        elif direction == 'x+' and self.pos[0] < self.level_width - 1 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
             self.pos[0] += 1
             moved = True
-        elif direction == 'y-' and self.pos[1] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
+        elif direction == 'y-' and self.pos[1] > 0 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
             self.pos[1] -= 1
             moved = True
-        elif direction == 'y+' and self.pos[1] < self.level_height - 1 and self.try_move(self.grid[pos[0]][pos[1]]):
+        elif direction == 'y+' and self.pos[1] < self.level_height - 1 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
             self.pos[1] += 1
             moved = True
         if self.grid[self.pos[0]][self.pos[1]].type != 'door':
@@ -112,7 +112,7 @@ class Player(pygame.sprite.Sprite):
 
         return moved
 
-    def move(self, x, y, maze, block_size):
+    def move(self, x, y, maze, block_size, all_enemies):
         if len(self.path) == 0:
             self.path = astar(maze, tuple(self.pos), (x, y))
         if self.path is None:
@@ -121,13 +121,13 @@ class Player(pygame.sprite.Sprite):
         move_to = list(self.path.pop(0))
         cell = self.grid[move_to[0]][move_to[1]]
         if self.pos[0] > move_to[0]:
-            self.move_step((move_to[0], move_to[1]), 'x-', block_size)
+            self.move_step((move_to[0], move_to[1]), all_enemies, 'x-', block_size)
         elif self.pos[0] < move_to[0]:
-            self.move_step((move_to[0], move_to[1]), 'x+', block_size)
+            self.move_step((move_to[0], move_to[1]), all_enemies, 'x+', block_size)
         elif self.pos[1] > move_to[1]:
-            self.move_step((move_to[0], move_to[1]), 'y-', block_size)
+            self.move_step((move_to[0], move_to[1]), all_enemies, 'y-', block_size)
         elif self.pos[1] < move_to[1]:
-            self.move_step((move_to[0], move_to[1]), 'y+', block_size)
+            self.move_step((move_to[0], move_to[1]), all_enemies, 'y+', block_size)
 
         if len(self.path) == 0:
             return False

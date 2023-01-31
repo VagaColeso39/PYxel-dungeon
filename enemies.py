@@ -31,8 +31,7 @@ class Enemy(pygame.sprite.Sprite):
         self.hp -= damage
         if self.hp <= 0:
             other.xp += self.xp_contains
-
-            grid[self.x][self.y].contains.remove(self)
+            # death
 
     def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int):
         if self.is_visible(grid, player_cell):
@@ -60,37 +59,21 @@ class Enemy(pygame.sprite.Sprite):
         if direction == 'x-' and self.try_move(grid[self.x - 1][self.y]) and self.x > 0:
             if player.pos != (self.x - 1, self.y):
                 self.x -= 1
-                self.rect.center = self.x * block_size, self.y * block_size
-                grid[self.x][self.y].contains.append(self)
-                if self in grid[self.x + 1][self.y].contains:
-                    grid[self.x + 1][self.y].contains.remove(self)
             else:
                 self.attack(player)
         elif direction == 'x+' and self.x < len(grid) - 1 and self.try_move(grid[self.x + 1][self.y]):
             if player.pos != (self.x + 1, self.y):
                 self.x += 1
-                self.rect.center = self.x * block_size, self.y * block_size
-                grid[self.x][self.y].contains.append(self)
-                if self in grid[self.x - 1][self.y].contains:
-                    grid[self.x - 1][self.y].contains.remove(self)
             else:
                 self.attack(player)
         elif direction == 'y-' and self.try_move(grid[self.x][self.y - 1]) and self.y > 0:
             if player.pos != (self.x, self.y - 1):
                 self.y -= 1
-                self.rect.center = self.x * block_size, self.y * block_size
-                grid[self.x][self.y].contains.append(self)
-                if self in grid[self.x][self.y + 1].contains:
-                    grid[self.x][self.y + 1].contains.remove(self)
             else:
                 self.attack(player)
         elif direction == 'y+' and self.y < len(grid[0]) - 1 and self.try_move(grid[self.x][self.y + 1]):
             if player.pos != (self.x, self.y + 1):
                 self.y += 1
-                self.rect.center = self.x * block_size, self.y * block_size
-                grid[self.x][self.y].contains.append(self)
-                if self in grid[self.x][self.y - 1].contains:
-                    grid[self.x][self.y - 1].contains.remove(self)
             else:
                 self.attack(player)
         if grid[self.x][self.y].type == 'earth':
@@ -103,7 +86,6 @@ class Enemy(pygame.sprite.Sprite):
         if path is not None:
             if len(path) > 1:
                 move_to = list(path.pop(1))
-                cell = grid[move_to[0]][move_to[1]]
                 if self.x > move_to[0]:
                     self.move_step(grid, 'x-', block_size, player)
                 elif self.x < move_to[0]:

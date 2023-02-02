@@ -16,7 +16,7 @@ class Tile(pygame.sprite.Sprite):
         self.gases = True  # like poisonous gas or freezing
         self.fire = True
         self.can_burn = True  # i can't think of anything better
-        self.contains = [] #enemies, items
+        self.contains = [] # items
 
     def change_tile(self, tile_class: Self):
         return tile_class(self.dungeon, self.x, self.y)

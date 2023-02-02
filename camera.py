@@ -42,9 +42,6 @@ class Camera:
                         color = DOOR_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'wall':
                         color = WALL_COLOR
-                    for enemy in self.level.all_enemies:
-                        if enemy.x == x and enemy.y == y:
-                            color = ENEMY_COLOR
 
                 elif self.level.dungeon.grid[x][y].visible or self.level.dungeon.grid[x][y].explored:
                     self.level.dungeon.grid[x][y].explored = True
@@ -65,24 +62,18 @@ class Camera:
                 pygame.draw.rect(self.screen, color, cell)
                 if color not in [PLAYER_COLOR, EMPTY_COLOR, ENEMY_COLOR]:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
-                
-
-        hp_bar = pygame.Rect(10, 10, int(400 * (self.player.hp / self.player.max_hp).__round__(2)), 15)
-        hp_bar_missing = pygame.Rect(10, 10, 400, 15)
-        pygame.draw.rect(self.screen, HP_BAR_COLOR_MISSING, hp_bar_missing)
-        pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar_missing, 2)
-        pygame.draw.rect(self.screen, HP_BAR_COLOR, hp_bar)
-        pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar, 2)
-        text = self.f1.render(f"{self.player.hp}/{self.player.max_hp}", True, HP_BAR_COLOR)
-        self.screen.blit(text, (410, 10))
 
         for enemy in self.level.all_enemies:
-            enemy.image = pygame.transform.scale(enemy.source, (self.block_size, self.block_size))
-            enemy.rect.center = (int(enemy.x * self.block_size - self.tl_x + self.block_size // 2),
+            if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[enemy.x][enemy.y]):
+                enemy.image = pygame.transform.scale(enemy.source, (self.block_size, self.block_size))
+                enemy.rect.center = (int(enemy.x * self.block_size - self.tl_x + self.block_size // 2),
                                        int(enemy.y * self.block_size - self.tl_y + self.block_size // 2))
+            else:
+                enemy.image = pygame.transform.scale(enemy.empty_sprite, (0, 0))
 
         self.player.image = pygame.transform.scale(self.player.source, (self.block_size, self.block_size))
         self.player.rect.center = (int(self.player.pos[0] * self.block_size - self.tl_x + self.block_size // 2), int(self.player.pos[1] * self.block_size - self.tl_y + self.block_size // 2))
+        self.draw_hud()
         self._next_frame_easing()  # call in the end
 
     @property
@@ -97,6 +88,16 @@ class Camera:
         if self.frames_skipped != self.strength:
             self.cx = self.cx + int((self.to_x - self.cx) * self.easing.ease(self.frames_skipped + 1))
             self.cy = self.cy + int((self.to_y - self.cy) * self.easing.ease(self.frames_skipped + 1))
+
+    def draw_hud(self):
+        hp_bar = pygame.Rect(10, 10, int(400 * (self.player.hp / self.player.max_hp).__round__(2)), 15)
+        hp_bar_missing = pygame.Rect(10, 10, 400, 15)
+        pygame.draw.rect(self.screen, HP_BAR_COLOR_MISSING, hp_bar_missing)
+        pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar_missing, 2)
+        pygame.draw.rect(self.screen, HP_BAR_COLOR, hp_bar)
+        pygame.draw.rect(self.screen, GRAY_BORDER, hp_bar, 2)
+        text = self.f1.render(f"{self.player.hp}/{self.player.max_hp}", True, HP_BAR_COLOR)
+        self.screen.blit(text, (410, 10))
 
     def _next_frame(self):
         if self.frames_skipped != self.strength:

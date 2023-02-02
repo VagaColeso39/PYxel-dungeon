@@ -1,11 +1,13 @@
 import random
 import sys
+
 import pygame
-from player import Player
-from level import Level
-from tiles import WallTile, DoorTile, EarthTile, FloorTile
+
 from camera import Camera
 from constants_original import *
+from level import Level
+from player import Player
+from tiles import FloorTile
 from utils.sounds import *
 
 pygame.init()
@@ -31,7 +33,6 @@ def main():
     camera.move_to(*player.pos)
     mouse_pos = (0, 0)
     current_x, current_y = 0, 0
-    mouse_pos = None
     dragging = 0
     running = False
 
@@ -41,7 +42,7 @@ def main():
 
     pygame.mixer.music.load('music/main_theme.wav')
     pygame.mixer.music.play(-1)
-    
+
     while True:
         CLOCK.tick_busy_loop(60)
         pygame.display.set_caption("fps: " + str(CLOCK.get_fps()))
@@ -70,7 +71,8 @@ def main():
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == 'earth':
                             pygame.mixer.Sound.play(dig_sound)
-                            level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][player.pos[1]].change_tile(FloorTile)
+                            level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][
+                                player.pos[1]].change_tile(FloorTile)
                         else:
                             pygame.mixer.Sound.play(step_sound)
                     else:
@@ -78,7 +80,8 @@ def main():
 
                     camera.move_to(*player.pos)
                     for enemy in level.all_enemies:
-                        enemy.turn(level.dungeon.grid, level.dungeon.grid[player.pos[0]][player.pos[1]], player, level.maze, block_size)
+                        enemy.turn(level.dungeon.grid, level.dungeon.grid[player.pos[0]][player.pos[1]], player,
+                                   level.maze, block_size, level.all_enemies)
 
             elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
@@ -99,11 +102,6 @@ def main():
 
             if pygame.mouse.get_pressed()[0]:
                 dragging += 1
-                '''x = camera.cx + 5 * (mouse_pos[0] - pygame.mouse.get_pos()[0])
-                y = camera.cy + 5 * (mouse_pos[1] - pygame.mouse.get_pos()[1])
-                camera.move_to(x, y, 'point')
-                mouse_pos = pygame.mouse.get_pos()'''
-
                 if mouse_pos is not None:
                     x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
                     y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
@@ -112,12 +110,12 @@ def main():
             x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
             y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
             camera.move_to(x, y, 'point')
-            if not player.move(*camera.get_cell(*mouse_pos), level.maze, block_size):
+            if not player.move(*camera.get_cell(*mouse_pos), level.maze, block_size, level.all_enemies):
                 running = False
             else:
                 for enemy in level.all_enemies:
                     enemy.turn(level.dungeon.grid, level.dungeon.grid[player.pos[0]][player.pos[1]], player, level.maze,
-                               block_size)
+                               block_size, level.all_enemies)
             pygame.time.delay(random.randint(70, 100))
         entities_sprites.update()
         entities_sprites.draw(SCREEN)

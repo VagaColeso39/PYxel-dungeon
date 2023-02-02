@@ -1,0 +1,90 @@
+{
+  "weapons": {
+    "short_sword": {
+      "damage": [8, 10],
+      "is_double_handed": false,
+      "range": 1,
+      "is_ranged": false,
+      "drop_cost": 20,
+      "drop_chance": 0.6
+    },
+    "sword": {
+      "damage": [12, 16],
+      "is_double_handed": false,
+      "range": 1,
+      "is_ranged": false,
+      "drop_cost": 40,
+      "drop_chance": 0.6
+    },
+    "long_sword": {
+      "damage": [20, 24],
+      "is_double_handed": true,
+      "range": 2,
+      "is_ranged": false,
+      "drop_cost": 80,
+      "drop_chance": 0.5
+    }
+  },
+  "armor": {
+    "cloth_armor": {
+      "defence": [0, 2],
+      "drop_cost": 20,
+      "drop_chance": 0.6
+    },
+    "leather_armor": {
+      "defence": [2, 4],
+      "drop_cost": 40,
+      "drop_chance": 0.6
+    },
+    "metal_armor": {
+      "defence": [4, 6],
+      "drop_cost": 80,
+      "drop_chance": 0.5
+    }
+  },
+  "potions": {
+    "healing_potion": {
+      "effect": "healing",
+      "drop_cost": 40,
+      "drop_chance": 0.7
+    },
+    "mental_vision_potion":{
+      "effect": "level_vision",
+      "drop_cost": 30,
+      "drop_chance": 0.6
+    },
+    "fire_potion": {
+      "effect": "fire",
+      "drop_cost": 30,
+      "drop_chance": 0.58
+    }
+  },
+  "scrolls": {
+    "upgrade_scroll": {
+      "effect": "upgrade",
+      "drop_cost": 40,
+      "drop_chance": 0.5
+    },
+    "blinding_scroll": {
+      "effect": "blinding_enemies",
+      "drop_cost": 20,
+      "drop_chance": 0.6
+    },
+    "teleport_scroll": {
+      "effect": "random_teleport",
+      "drop_cost": 20,
+      "drop_chance": 0.6
+    }
+  },
+  "utils": {
+    "arrow": {
+      "throwable": true,
+      "damage": [
+        4,
+        8
+      ],
+      "drop_cost": 20,
+      "drop_chance": 0.7
+    }
+  }
+}

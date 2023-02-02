@@ -3,12 +3,12 @@ import random
 import pygame
 
 import bags
+from enemies import Enemy
 from tiles import FloorTile
 from tiles import Tile
 from utils.algorithms import *
 from utils.astar import astar
 from utils.sounds import *
-from enemies import Enemy
 
 
 class Player(pygame.sprite.Sprite):
@@ -27,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.pos = start_pos
         self.backpack = bags.Backpack(self)
         self.vision_field = 6
+        self.block_size = 20
         self.bags = []
         self.weapon = None
         self.armor = None
@@ -50,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         self.attack_speed_multipliers = []
         self.path = []
         self.keys = 100  # FIX
+        self.maze = []
 
         self.max_hp = 20
         self.hp = 15
@@ -68,11 +70,13 @@ class Player(pygame.sprite.Sprite):
                 return True
         return False
 
-    def try_move(self, cell, all_enemies):
-        for enemy in all_enemies:
-            if enemy.x == cell.x and enemy.y == cell.y:
-                enemy.hit_self(self, random.randint(*self.weapon['damage'], self.grid))
-                return False
+    def enemy_check(self, tile: Tile, enemies: list):
+        for enemy in enemies:
+            if enemy.x == tile.x and enemy.y == tile.y:
+                return enemy
+        return False
+
+    def try_move(self, cell):
         if cell.type == 'door':
             if cell.modificator == 'closed':
                 if self.keys > 0:
@@ -87,18 +91,22 @@ class Player(pygame.sprite.Sprite):
 
     def move_step(self, pos: tuple[int, int], all_enemies, direction: str = 'x+', block_size: int = 20):
         moved = False
-        if not (0 <= pos[0] <= self.level_width) and not (0 <= pos[1] <= self.level_height):
+        if not (0 <= pos[0] < len(self.grid) and 0 <= pos[1] < len(self.grid[0])):
             return False
-        if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
+        check = self.enemy_check(self.grid[pos[0]][pos[1]], all_enemies)
+        if type(check) == Enemy:
+            check.hit_self(self, random.randint(*self.weapon['damage']), all_enemies)
+            return True # hit sound?
+        if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[0] -= 1
             moved = True
-        elif direction == 'x+' and self.pos[0] < self.level_width - 1 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
+        elif direction == 'x+' and self.pos[0] < self.level_width - 1 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[0] += 1
             moved = True
-        elif direction == 'y-' and self.pos[1] > 0 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
+        elif direction == 'y-' and self.pos[1] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[1] -= 1
             moved = True
-        elif direction == 'y+' and self.pos[1] < self.level_height - 1 and self.try_move(self.grid[pos[0]][pos[1]], all_enemies):
+        elif direction == 'y+' and self.pos[1] < self.level_height - 1 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[1] += 1
             moved = True
         if self.grid[self.pos[0]][self.pos[1]].type != 'door':
@@ -112,7 +120,9 @@ class Player(pygame.sprite.Sprite):
 
         return moved
 
-    def move(self, x, y, maze, block_size, all_enemies):
+    def move(self, x, y, maze, block_size, all_enemies:list):
+        self.maze = maze
+        self.block_size = block_size
         if len(self.path) == 0:
             self.path = astar(maze, tuple(self.pos), (x, y))
         if self.path is None:

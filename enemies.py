@@ -5,13 +5,15 @@ import pygame
 from tiles import Tile, FloorTile
 from utils.algorithms import *
 from utils.astar import astar
+from items import item_generator
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat',
-                 xp_contains: int = 3):
+                 xp_contains: int = 3, item_drop_cost: int = 20):
         pygame.sprite.Sprite.__init__(self)
-        self.source = pygame.image.load('sprites/player.png')  # enemy.png
+        self.source = pygame.image.load('sprites/enemy_knight.png')  # enemy.png
+        self.empty_sprite = pygame.image.load('sprites/empty_sprite.jpg')
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
         self.rect.center = (x * 20, y * 20)
@@ -21,26 +23,33 @@ class Enemy(pygame.sprite.Sprite):
         self.dmg = dmg
         self.name = name
         self.xp_contains = xp_contains
+        self.item_drop_cost = item_drop_cost
         self.x = x
         self.y = y
 
     def attack(self, other):
         other.hit_hero(random.randint(*self.dmg))
 
-    def hit_self(self, other, damage, grid):
+    def hit_self(self, other, damage, all_enemies: list):
         self.hp -= damage
         if self.hp <= 0:
+            # other.level_up
             other.xp += self.xp_contains
-            # death
+            item = item_generator(self.item_drop_cost)
+            if item: # may drop nothing
+                print('drop', item)
+                other.grid[self.x][self.y].contains.append(item)
+            all_enemies.remove(self)
+            self.kill()
 
-    def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int):
+    def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int, all_enemies:list):
         if self.is_visible(grid, player_cell):
             if abs(self.x - player.pos[0]) + abs(self.y - player.pos[1]) <= 1:
                 self.attack(player)
             else:
-                self.move(player_cell.x, player_cell.y, maze, block_size, grid, player, player_cell)
+                self.move(player_cell.x, player_cell.y, maze, block_size, grid, player, all_enemies)
         else:
-            self.move_step(grid, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)
+            self.move_step(grid, all_enemies, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)
 
     def is_visible(self, grid: list, cell: Tile):
         if pifagor((self.x, self.y), (cell.x, cell.y)) <= self.vision_field:
@@ -50,28 +59,31 @@ class Enemy(pygame.sprite.Sprite):
                 return True
         return False
 
-    def try_move(self, cell):
+    def try_move(self, cell, all_enemies: list):
         if (cell.type == 'door' and not cell.opened) or (cell.type == 'wall'):
             return False
+        for enemy in all_enemies:
+            if enemy.x == cell.x and enemy.y == cell.y:
+                return False
         return True
 
-    def move_step(self, grid: list, direction: str = 'x+', block_size: int = 20, player: object = None):
-        if direction == 'x-' and self.try_move(grid[self.x - 1][self.y]) and self.x > 0:
+    def move_step(self, grid: list, all_enemies: list,  direction: str = 'x+', block_size: int = 20, player: object = None):
+        if direction == 'x-' and self.try_move(grid[self.x - 1][self.y], all_enemies) and self.x > 0:
             if player.pos != (self.x - 1, self.y):
                 self.x -= 1
             else:
                 self.attack(player)
-        elif direction == 'x+' and self.x < len(grid) - 1 and self.try_move(grid[self.x + 1][self.y]):
+        elif direction == 'x+' and self.x < len(grid) - 1 and self.try_move(grid[self.x + 1][self.y], all_enemies):
             if player.pos != (self.x + 1, self.y):
                 self.x += 1
             else:
                 self.attack(player)
-        elif direction == 'y-' and self.try_move(grid[self.x][self.y - 1]) and self.y > 0:
+        elif direction == 'y-' and self.try_move(grid[self.x][self.y - 1], all_enemies) and self.y > 0:
             if player.pos != (self.x, self.y - 1):
                 self.y -= 1
             else:
                 self.attack(player)
-        elif direction == 'y+' and self.y < len(grid[0]) - 1 and self.try_move(grid[self.x][self.y + 1]):
+        elif direction == 'y+' and self.y < len(grid[0]) - 1 and self.try_move(grid[self.x][self.y + 1], all_enemies):
             if player.pos != (self.x, self.y + 1):
                 self.y += 1
             else:
@@ -81,19 +93,19 @@ class Enemy(pygame.sprite.Sprite):
 
         return True
 
-    def move(self, x, y, maze, block_size, grid, player, player_cell):
+    def move(self, x, y, maze, block_size, grid, player, all_enemies):
         path = astar(maze, (self.x, self.y), (x, y))
         if path is not None:
             if len(path) > 1:
                 move_to = list(path.pop(1))
                 if self.x > move_to[0]:
-                    self.move_step(grid, 'x-', block_size, player)
+                    self.move_step(grid, all_enemies, 'x-', block_size, player)
                 elif self.x < move_to[0]:
-                    self.move_step(grid, 'x+', block_size, player)
+                    self.move_step(grid, all_enemies, 'x+', block_size, player)
                 elif self.y > move_to[1]:
-                    self.move_step(grid, 'y-', block_size, player)
+                    self.move_step(grid, all_enemies, 'y-', block_size, player)
                 elif self.y < move_to[1]:
-                    self.move_step(grid, 'y+', block_size, player)
+                    self.move_step(grid, all_enemies, 'y+', block_size, player)
             else:
                 self.attack(player)
         else:

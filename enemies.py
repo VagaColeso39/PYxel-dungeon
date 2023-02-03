@@ -12,7 +12,8 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat',
                  xp_contains: int = 3, item_drop_cost: int = 20):
         pygame.sprite.Sprite.__init__(self)
-        self.source = pygame.image.load('sprites/enemy_knight.png')  # enemy.png
+        self.source = pygame.image.load('sprites/enemy_knight.bmp')  # enemy.png
+        self.source.set_colorkey((255, 255, 255))
         self.empty_sprite = pygame.image.load('sprites/empty_sprite.jpg')
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()

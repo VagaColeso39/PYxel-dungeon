@@ -79,10 +79,7 @@
   "utils": {
     "arrow": {
       "throwable": true,
-      "damage": [
-        4,
-        8
-      ],
+      "damage": [4, 8],
       "drop_cost": 20,
       "drop_chance": 0.7
     }

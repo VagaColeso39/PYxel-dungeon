@@ -63,6 +63,14 @@ class Camera:
                 if color not in [PLAYER_COLOR, EMPTY_COLOR, ENEMY_COLOR]:
                     pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
 
+                if self.level.dungeon.grid[x][y].contains and self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
+                    for item in self.level.dungeon.grid[x][y].contains:
+                        item.image = pygame.transform.scale(item.source, (self.block_size, self.block_size))
+                        item.rect.center = (
+                            int(x * self.block_size - self.tl_x + self.block_size // 2),
+                            int(y * self.block_size - self.tl_y + self.block_size // 2))
+                        self.screen.blit(item.image, item.rect)
+
         for enemy in self.level.all_enemies:
             if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[enemy.x][enemy.y]):
                 enemy.image = pygame.transform.scale(enemy.source, (self.block_size, self.block_size))

@@ -66,6 +66,12 @@ def main():
                     moved = player.move_step((player.pos[0] + 1, player.pos[1]), level.all_enemies, 'x+', block_size)
                 elif event.key == pygame.K_SPACE:
                     moved = True
+                elif event.key == pygame.K_e:
+                    if level.dungeon.grid[player.pos[0]][player.pos[1]].contains:
+                        player.pick_up(level.dungeon.grid[player.pos[0]][player.pos[1]].contains.pop(-1))
+                        moved = True
+                elif event.key == pygame.K_TAB:
+                    print(player.backpack)
 
                 if moved:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':

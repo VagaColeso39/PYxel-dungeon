@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="system for drop items">
+      <change afterPath="$PROJECT_DIR$/sprites/enemy_knight.bmp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/tiles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/items.py" beforeDir="false" afterPath="$PROJECT_DIR$/items.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/items/items_params.json" beforeDir="false" afterPath="$PROJECT_DIR$/items/items_params.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sprites/enemy_knight.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sprites/simple_wall_basic.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,9 +50,9 @@
       <recent name="C:\Users\Misha\Documents\PYxel-dungeon\sprites" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Misha\Documents\PYxel-dungeon\sprites" />
       <recent name="C:\Users\Misha\Documents\PYxel-dungeon\music" />
       <recent name="C:\Users\Misha\Documents\PYxel-dungeon" />
-      <recent name="C:\Users\Misha\Documents\PYxel-dungeon\sprites" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -164,10 +171,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.camera" />
         <item itemvalue="Python.items" />
         <item itemvalue="Python.enemies" />
         <item itemvalue="Python.TOTESTS" />
-        <item itemvalue="Python.camera" />
       </list>
     </recent_temporary>
   </component>

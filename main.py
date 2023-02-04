@@ -27,7 +27,7 @@ SCREEN.fill(EMPTY_COLOR)
 def main():
     player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
 
-    player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'}
+    player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'} # turn to item
     player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
     camera = Camera(player, level, SCREEN)
     camera.move_to(*player.pos)

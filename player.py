@@ -54,7 +54,7 @@ class Player(pygame.sprite.Sprite):
         self.maze = []
 
         self.max_hp = 20
-        self.hp = 15
+        self.hp = self.max_hp
 
     def hit_hero(self, damage):
         self.hp -= damage
@@ -96,7 +96,8 @@ class Player(pygame.sprite.Sprite):
         check = self.enemy_check(self.grid[pos[0]][pos[1]], all_enemies)
         if type(check) == Enemy:
             check.hit_self(self, random.randint(*self.weapon.damage), all_enemies)
-            return True # hit sound?
+            pygame.mixer.Sound.play(hit_sound)
+            return True
         if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[0] -= 1
             moved = True

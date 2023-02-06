@@ -2,15 +2,15 @@ import random
 
 import pygame
 
+from items import item_generator
 from tiles import Tile, FloorTile
 from utils.algorithms import *
 from utils.astar import astar
-from items import item_generator
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat',
-                 xp_contains: int = 3, item_drop_cost: int = 20):
+                 xp_contains: int = 3, item_drop_cost: int = 20, defence: tuple[int, int] = (0, 2)):
         pygame.sprite.Sprite.__init__(self)
         self.source = pygame.image.load('sprites/enemy_knight.bmp')  # enemy.png
         self.source.set_colorkey((255, 255, 255))
@@ -22,6 +22,7 @@ class Enemy(pygame.sprite.Sprite):
         self.hp = hp
         self.vision_field = 6
         self.dmg = dmg
+        self.defence = defence
         self.name = name
         self.xp_contains = xp_contains
         self.item_drop_cost = item_drop_cost
@@ -32,18 +33,20 @@ class Enemy(pygame.sprite.Sprite):
         other.hit_hero(random.randint(*self.dmg))
 
     def hit_self(self, other, damage, all_enemies: list):
-        self.hp -= damage
+        damage -= random.randint(*self.defence)
+        if damage > 0:
+            self.hp -= damage
         if self.hp <= 0:
             # other.level_up
             other.xp += self.xp_contains
             item = item_generator(self.item_drop_cost)
-            if item: # may drop nothing
+            if item:  # may drop nothing
                 print('drop', item)
                 other.grid[self.x][self.y].contains.append(item)
             all_enemies.remove(self)
             self.kill()
 
-    def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int, all_enemies:list):
+    def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int, all_enemies: list):
         if self.is_visible(grid, player_cell):
             if abs(self.x - player.pos[0]) + abs(self.y - player.pos[1]) <= 1:
                 self.attack(player)
@@ -68,7 +71,8 @@ class Enemy(pygame.sprite.Sprite):
                 return False
         return True
 
-    def move_step(self, grid: list, all_enemies: list,  direction: str = 'x+', block_size: int = 20, player: object = None):
+    def move_step(self, grid: list, all_enemies: list, direction: str = 'x+', block_size: int = 20,
+                  player: object = None):
         if direction == 'x-' and self.try_move(grid[self.x - 1][self.y], all_enemies) and self.x > 0:
             if player.pos != (self.x - 1, self.y):
                 self.x -= 1

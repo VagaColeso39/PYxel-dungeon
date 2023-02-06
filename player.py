@@ -57,7 +57,9 @@ class Player(pygame.sprite.Sprite):
         self.hp = self.max_hp
 
     def hit_hero(self, damage):
-        self.hp -= damage
+        damage -= random.randint(*self.armor.defence)
+        if damage > 0:
+            self.hp -= damage
 
     def pick_up(self, item):
         return self.backpack.pick_up(item)

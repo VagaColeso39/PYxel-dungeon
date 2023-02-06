@@ -95,7 +95,7 @@ class Player(pygame.sprite.Sprite):
             return False
         check = self.enemy_check(self.grid[pos[0]][pos[1]], all_enemies)
         if type(check) == Enemy:
-            check.hit_self(self, random.randint(*self.weapon['damage']), all_enemies)
+            check.hit_self(self, random.randint(*self.weapon.damage), all_enemies)
             return True # hit sound?
         if direction == 'x-' and self.pos[0] > 0 and self.try_move(self.grid[pos[0]][pos[1]]):
             self.pos[0] -= 1

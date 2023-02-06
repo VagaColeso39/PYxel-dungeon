@@ -9,6 +9,7 @@ from level import Level
 from player import Player
 from tiles import FloorTile
 from utils.sounds import *
+from items import item_giver
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -27,8 +28,8 @@ SCREEN.fill(EMPTY_COLOR)
 def main():
     player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
 
-    player.weapon = {'damage': (8, 10), 'isDoubleHand': False, 'name': 'shortSword'} # turn to item
-    player.armor = {'defence': (0, 2), 'name': 'leatherArmor'}
+    player.weapon = item_giver('short_sword', 'weapons')
+    player.armor = item_giver('cloth_armor', 'armor')
     camera = Camera(player, level, SCREEN)
     camera.move_to(*player.pos)
     mouse_pos = (0, 0)

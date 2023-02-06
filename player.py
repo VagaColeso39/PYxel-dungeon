@@ -14,7 +14,7 @@ from utils.sounds import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, start_pos: list[int, int], level_width, level_height, grid):
         pygame.sprite.Sprite.__init__(self)
-        self.source = pygame.image.load('sprites/player.png')
+        self.source = pygame.image.load('sprites/new-player.png')
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
         self.rect.center = (start_pos[0] * 20, start_pos[1] * 20)

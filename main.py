@@ -17,7 +17,7 @@ entities_sprites = pygame.sprite.Group()
 
 multiplier = random.randint(55, 60)
 chance_for_door = 100
-block_size = 20
+block_size = 40
 level = Level(multiplier, chance_for_door, 1, block_size)
 
 SCREEN = pygame.display.set_mode((500, 500))

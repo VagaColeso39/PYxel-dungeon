@@ -90,7 +90,6 @@ class Camera:
         self.player.image = pygame.transform.scale(self.player.source, (self.block_size, self.block_size))
         self.player.rect.center = (int(self.player.pos[0] * self.block_size - self.tl_x + self.block_size // 2),
                                    int(self.player.pos[1] * self.block_size - self.tl_y + self.block_size // 2))
-        print(self.player.rect.center, (int(self.player.pos[0] * self.block_size - self.tl_x), int(self.player.pos[1] * self.block_size - self.tl_y)))
         self.draw_hud()
         self._next_frame_easing()  # call in the end
 

@@ -141,9 +141,7 @@ def item_generator(drop_cost: int, categories: tuple = ('weapons', 'armor', 'pot
 
 
 def item_giver(name: str, category: str):
-    print(items_storage.groups_of_items[category].items())
     item = tuple(filter(lambda x: x[0] == name, items_storage.groups_of_items[category].items()))
-    print(item)
     if category == 'weapons':
         return_item = WeaponItem(item[0][0], 1, 1, False, True, False, False, item[0][1]['drop_cost'],
                                  item[0][1]['damage'], item[0][1]['is_double_handed'], item[0][1]['range'],

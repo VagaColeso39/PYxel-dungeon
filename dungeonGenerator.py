@@ -160,9 +160,9 @@ class dungeonGenerator:
     def placeWalls(self):
         for x in range(self.width):
             for y in range(self.height):
-                if self.grid[x][y].type != 'floor':
+                if self.grid[x][y].type not in ['floor', 'ladder_up', 'ladder_down']:
                     for nx, ny in self.findNeighbours(x, y):
-                        if self.grid[nx][ny].type in ['floor']:
+                        if self.grid[nx][ny].type in ['floor', 'ladder_up', 'ladder_down']:
                             self.grid[x][y] = WallTile(self, y, x)
                             break
 

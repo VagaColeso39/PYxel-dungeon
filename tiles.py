@@ -102,3 +102,11 @@ class DoorTile(Tile):
     def step(self, reason):
         if not self.opened:
             self.opened = True
+
+
+class LadderTile(Tile):
+    def __init__(self, dungeon, x, y, direction: str):
+        super().__init__(dungeon, x, y, type=f'ladder_{direction}')
+
+
+

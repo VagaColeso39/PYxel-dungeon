@@ -42,6 +42,10 @@ class Camera:
                         color = DOOR_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'wall':
                         color = WALL_COLOR
+                    elif self.level.dungeon.grid[x][y].type == "ladder_down":
+                        color = LADDER_DOWN_COLOR
+                    elif self.level.dungeon.grid[x][y].type == "ladder_up":
+                        color = LADDER_UP_COLOR
 
                 elif self.level.dungeon.grid[x][y].visible or self.level.dungeon.grid[x][y].explored:
                     self.level.dungeon.grid[x][y].explored = True
@@ -54,6 +58,10 @@ class Camera:
                         color = DOOR_COLOR_FADED
                     elif self.level.dungeon.grid[x][y].type == 'wall':
                         color = WALL_COLOR_FADED
+                    elif self.level.dungeon.grid[x][y].type == "ladder_down":
+                        color = LADDER_DOWN_COLOR_FADED
+                    elif self.level.dungeon.grid[x][y].type == "ladder_up":
+                        color = LADDER_UP_COLOR_FADED
                 else:
                     color = EMPTY_COLOR
                 

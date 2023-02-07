@@ -2,7 +2,7 @@ import dungeonGenerator
 import random
 from enemies import Enemy
 import pygame
-
+from tiles import LadderTile
 
 class Level:
     def room_creator(self):
@@ -37,7 +37,12 @@ class Level:
         self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width, block_size)
         self.room_creator()
 
-        self.dungeon.rooms[-1].room_type = "treasure"
+        self.dungeon.rooms[-1].room_type = "ladder"
+        x = random.randint(self.dungeon.rooms[-1].x + 1, self.dungeon.rooms[-1].x + self.dungeon.rooms[-1].width - 1)
+        y = random.randint(self.dungeon.rooms[-1].y + 1, self.dungeon.rooms[-1].y + self.dungeon.rooms[-1].height - 1)
+        self.dungeon.grid[x][y] = LadderTile(self.dungeon, x, y, 'down')
+        print(x, y)
+
         self.closed_rooms_amount = random.randint(1, 2)
         for i in range(1, self.closed_rooms_amount + 1):
             self.dungeon.rooms[-1 - i].room_type = "closed"

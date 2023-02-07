@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="680103c4-d90c-44eb-83e1-e46b8782db9a" name="Changes" comment="system for drop items">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +19,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -156,11 +163,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.camera" />
-      <item itemvalue="Python.main" />
       <item itemvalue="Python.TOTESTS" />
+      <item itemvalue="Python.camera" />
       <item itemvalue="Python.enemies" />
       <item itemvalue="Python.items" />
+      <item itemvalue="Python.main" />
     </list>
     <recent_temporary>
       <list>

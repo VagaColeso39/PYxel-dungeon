@@ -10,6 +10,7 @@ from player import Player
 from tiles import FloorTile
 from utils.sounds import *
 from items import item_giver
+from tiles import LadderTile
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -17,8 +18,10 @@ entities_sprites = pygame.sprite.Group()
 
 multiplier = random.randint(55, 60)
 chance_for_door = 100
-block_size = 40
+block_size = 20
 level = Level(multiplier, chance_for_door, 1, block_size)
+levels = []
+levels.append(level)
 
 SCREEN = pygame.display.set_mode((500, 500))
 CLOCK = pygame.time.Clock()
@@ -26,6 +29,7 @@ SCREEN.fill(EMPTY_COLOR)
 
 
 def main():
+    global level
     player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
 
     player.weapon = item_giver('short_sword', 'weapons')
@@ -75,6 +79,30 @@ def main():
                     print(player.backpack)
 
                 if moved:
+                    if "ladder" in level.dungeon.grid[player.pos[0]][player.pos[1]].type:
+                        if level.dungeon.grid[player.pos[0]][player.pos[1]].type == "ladder_down":
+                            if level.num == len(levels):  # if it is the last level currently
+                                levels.append(Level(multiplier, chance_for_door, level.num + 1, block_size))
+                            level = levels[level.num]
+                        else:
+                            level = levels[level.num - 2]
+
+                        level.start_room.room_type = "start"
+                        if level.num != 1:
+                            level.dungeon.grid[level.start_pos[0]][level.start_pos[1]] = \
+                                LadderTile(level.dungeon, level.start_pos[0], level.start_pos[1], 'up')
+
+                        entities_sprites.empty()
+                        entities_sprites.add(player)
+                        for enemy in level.all_enemies:
+                            entities_sprites.add(enemy)
+
+                        camera = Camera(player, level, SCREEN)
+                        camera.move_to(*player.pos)
+
+                        player.grid = level.dungeon.grid
+                        player.pos = level.start_pos
+
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == 'earth':
                             pygame.mixer.Sound.play(dig_sound)

@@ -64,7 +64,7 @@ class Level:
         for row in range(self.level_height):
             line = []
             for cell in range(self.level_width):
-                if self.dungeon.grid[row][cell].type in ['floor', 'earth', 'door'] and (self.dungeon.grid[row][cell].explored or self.dungeon.grid[row][cell].visible):
+                if self.dungeon.grid[row][cell].type in ['floor', 'door'] and (self.dungeon.grid[row][cell].explored or self.dungeon.grid[row][cell].visible):
                     line.append(0)
                 else:
                     line.append(1)

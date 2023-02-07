@@ -61,13 +61,13 @@ def main():
                     pygame.quit()
                     sys.exit()
                 moved = False
-                if event.key == pygame.K_UP:
+                if event.key in [pygame.K_UP, pygame.K_w]:
                     moved = player.move_step((player.pos[0], player.pos[1] - 1), level.all_enemies, 'y-', block_size)
-                elif event.key == pygame.K_DOWN:
+                elif event.key in [pygame.K_s, pygame.K_DOWN]:
                     moved = player.move_step((player.pos[0], player.pos[1] + 1), level.all_enemies, 'y+', block_size)
-                elif event.key == pygame.K_LEFT:
+                elif event.key in [pygame.K_LEFT, pygame.K_a]:
                     moved = player.move_step((player.pos[0] - 1, player.pos[1]), level.all_enemies, 'x-', block_size)
-                elif event.key == pygame.K_RIGHT:
+                elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                     moved = player.move_step((player.pos[0] + 1, player.pos[1]), level.all_enemies, 'x+', block_size)
                 elif event.key == pygame.K_SPACE:
                     moved = True

@@ -20,6 +20,7 @@ class Item:
         self.cursed_known = cursed_known
         self.known = known  # is item indentified
         self.essential = essential  # don't know why it is here, but in original code this exist
+        self.effect = None
 
     def __str__(self) -> str:
         return f'{self.name} x{self.quantity}'
@@ -51,6 +52,31 @@ class Item:
     def is_cursed(self):
         if self.cursed_known or self.known:
             return self.cursed
+
+    def use(self, level: object = None, enemies: list = None, player: object = None, camera: object = None) -> None:
+        if self.effect is not None:
+            if self.effect == 'blinding':
+                for enemy in enemies:
+                    if enemy.visible:
+                        enemy.blind(10)
+            elif self.effect == 'teleport':
+                room = random.choice(level.dungeon.rooms)
+                x = random.randint(room.x + 1, room.x + room.width - 1)
+                y = random.randint(room.y + 1, room.y + room.height - 1)
+                player.pos = [x, y]
+                camera.move_to(*player.pos)
+            elif self.effect == 'map_explore':
+                for cell in level.dungeon.grid:
+                    cell.explored = True
+            elif self.effect == 'healing':
+                player.hp = min(player.max_hp, player.hp + player.max_hp // 2)
+            elif self.effect == 'fire':
+                player.effects.append((10, 'fire')) # add fire
+            return True
+        return False
+
+
+
 
 
 class WeaponItem(Item):

@@ -10,12 +10,13 @@ from utils.astar import astar
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat',
-                 xp_contains: int = 3, item_drop_cost: int = 20, defence: tuple[int, int] = (0, 2)):
+                 xp_contains: int = 3, item_drop_cost: tuple[int, int] = (20, 35), defence: tuple[int, int] = (0, 2)):
         pygame.sprite.Sprite.__init__(self)
         self.source = pygame.image.load('sprites/enemy_knight.bmp')  # enemy.png
         self.source.set_colorkey((255, 255, 255))
         self.empty_sprite = pygame.image.load('sprites/empty_sprite.jpg')
         self.image = pygame.transform.scale(self.source, (20, 20))
+        self.visible = False
         self.rect = self.image.get_rect()
         self.rect.center = (x * 20, y * 20)
         self._layer = 1
@@ -29,6 +30,11 @@ class Enemy(pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
+        self.blind_counter = 0
+
+    def blind(self, time: int = 10):
+        self.blind_counter += time
+
     def attack(self, other):
         other.hit_hero(random.randint(*self.dmg))
 
@@ -39,7 +45,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.hp <= 0:
             # other.level_up
             other.xp += self.xp_contains
-            item = item_generator(self.item_drop_cost)
+            item = item_generator(random.randint(*self.item_drop_cost))
             if item:  # may drop nothing
                 print('drop', item)
                 other.grid[self.x][self.y].contains.append(item)
@@ -47,6 +53,11 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
 
     def turn(self, grid: list, player_cell: Tile, player: object, maze: list, block_size: int, all_enemies: list):
+        if self.blind_counter > 0:
+            self.blind_counter -= 1
+            self.vision_field = 1
+        else:
+            self.vision_field = 6
         if self.is_visible(grid, player_cell):
             if abs(self.x - player.pos[0]) + abs(self.y - player.pos[1]) <= 1:
                 self.attack(player)

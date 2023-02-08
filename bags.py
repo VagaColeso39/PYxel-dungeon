@@ -7,12 +7,23 @@ class Backpack:
         self.items = []
         self.capacity = capacity
         self.allowed_items = allowed_items  # to allow item create tuple with it's class or parent class
+        self.items_iteration = 0 # for iterations
 
     def __str__(self) -> str:
         return f'Backpack: {self.items}'
 
     def __repr__(self) -> str:
         return self.__str__()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.items_iteration < len(self.items):
+            item = self.items[self.items_iteration]
+            self.items_iteration += 1
+            return item
+        raise StopIteration
 
     def can_hold(self, item):
         if isinstance(item, Backpack) or (len(self.items) < self.capacity and isinstance(item, self.allowed_items)):

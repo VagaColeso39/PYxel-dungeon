@@ -7,10 +7,9 @@ from camera import Camera
 from constants_original import *
 from level import Level
 from player import Player
-from tiles import FloorTile
+from tiles import FloorTile, LadderTile
 from utils.sounds import *
 from items import item_giver
-from tiles import LadderTile
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -19,9 +18,9 @@ entities_sprites = pygame.sprite.Group()
 multiplier = random.randint(55, 60)
 chance_for_door = 100
 block_size = 20
+
 level = Level(multiplier, chance_for_door, 1, block_size)
-levels = []
-levels.append(level)
+levels = [level]
 
 SCREEN = pygame.display.set_mode((500, 500))
 CLOCK = pygame.time.Clock()
@@ -76,6 +75,9 @@ def main():
                         player.pick_up(level.dungeon.grid[player.pos[0]][player.pos[1]].contains.pop(-1))
                         moved = True
                 elif event.key == pygame.K_TAB:
+                    for item in player.backpack:
+                        if item.use(enemies=level.all_enemies, level=level, player=player, camera=camera):
+                            player.backpack.items.remove(item)
                     print(player.backpack)
 
                 if moved:

@@ -1,16 +1,3 @@
-##################################################################
-#                                                                #
-# Procedural Dungeon Generator                                   #
-#                                                                #
-# By Jay (Battery)                                               #
-#                                                                #
-# https://whatjaysaid.wordpress.com/                             #
-# for how use it got to:                                         #
-# https://whatjaysaid.wordpress.com/2016/01/15/1228              #
-#                                                                #
-# Feel free to use this as you wish, but please keep this header #
-#                                                                #
-##################################################################
 import random
 from random import randint, randrange
 
@@ -39,6 +26,7 @@ class dungeonGenerator:
         self.grid = [[EarthTile(self, x, y) for y in range(self.height)] for x in range(self.width)]
 
         self.graph = {}
+
     def __iter__(self):
         for xi in range(self.width):
             for yi in range(self.height):

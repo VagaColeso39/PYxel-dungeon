@@ -49,7 +49,7 @@
       "drop_chance": 0.7
     },
     "mental_vision_potion":{
-      "effect": "level_vision",
+      "effect": "map_explore",
       "drop_cost": 30,
       "drop_chance": 0.6
     },
@@ -66,12 +66,12 @@
       "drop_chance": 0.5
     },
     "blinding_scroll": {
-      "effect": "blinding_enemies",
+      "effect": "blinding",
       "drop_cost": 20,
       "drop_chance": 0.6
     },
     "teleport_scroll": {
-      "effect": "random_teleport",
+      "effect": "teleport",
       "drop_cost": 20,
       "drop_chance": 0.6
     }

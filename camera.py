@@ -81,10 +81,12 @@ class Camera:
 
         for enemy in self.level.all_enemies:
             if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[enemy.x][enemy.y]):
+                enemy.visible = True
                 enemy.image = pygame.transform.scale(enemy.source, (self.block_size, self.block_size))
                 enemy.rect.center = (int(enemy.x * self.block_size - self.tl_x + self.block_size // 2),
                                        int(enemy.y * self.block_size - self.tl_y + self.block_size // 2))
             else:
+                enemy.visible = False
                 enemy.image = pygame.transform.scale(enemy.empty_sprite, (0, 0))
 
         self.player.image = pygame.transform.scale(self.player.source, (self.block_size, self.block_size))

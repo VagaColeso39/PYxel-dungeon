@@ -108,7 +108,7 @@ items_storage = ItemsInitialization()
 
 
 def item_generator(drop_cost: int, categories: tuple = ('weapons', 'armor', 'potions', 'scrolls', 'utils')):
-    category = random.choice(categories)
+    category = random.choices(categories, cum_weights=[1, 2, 4, 6, 8], k=1)[0]
     items_to_choose = tuple(
         filter(lambda x: x[1]['drop_cost'] <= drop_cost, items_storage.groups_of_items[category].items()))
     if items_to_choose:

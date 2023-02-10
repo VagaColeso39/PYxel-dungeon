@@ -1,4 +1,4 @@
-from items import Item
+from items import Item, ScrollItem, PotionItem
 
 
 class Backpack:
@@ -14,6 +14,9 @@ class Backpack:
 
     def __repr__(self) -> str:
         return self.__str__()
+    
+    def __getitem__(self, key):
+        return self.items[key]
 
     def __iter__(self):
         return self
@@ -59,3 +62,11 @@ class Backpack:
 
     def set_quantity(self, item, quantity):
         self.get_item(item).quantity = quantity
+
+class ScrollHolder(Backpack):
+    def __init__(self, hero):
+        super().__init__(hero, 19, (ScrollItem,))
+
+class PotionHolder(Backpack):
+    def __init__(self, hero):
+        super().__init__(hero, 19, (PotionItem,))

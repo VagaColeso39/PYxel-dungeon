@@ -1,3 +1,6 @@
+import pygame.freetype
+pygame.freetype.init()
+
 EMPTY_COLOR = (20, 20, 20)
 DOOR_COLOR = (97, 34, 34)
 DOOR_COLOR_FADED = (127, 64, 64)
@@ -17,3 +20,4 @@ HP_BAR_COLOR = (147, 229, 171)
 HP_BAR_COLOR_MISSING = (107, 189, 131)
 ENEMY_COLOR = (255, 0, 0)
 GREEN = (0, 255, 0)
+FONT = pygame.freetype.Font('assets/fonts/pixel_font.ttf', 10)

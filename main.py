@@ -10,6 +10,7 @@ from player import Player
 from tiles import FloorTile, LadderTile
 from utils.sounds import *
 from items import item_giver
+from inventory import Inventory
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -45,7 +46,10 @@ def main():
     for enemy in level.all_enemies:
         entities_sprites.add(enemy)
 
-    pygame.mixer.music.load('music/main_theme.wav')
+    inventory = Inventory(SCREEN, player)
+    entities_sprites.add(inventory)
+
+    pygame.mixer.music.load('assets/music/main_theme.wav')
     pygame.mixer.music.play(-1)
 
     while True:
@@ -76,10 +80,7 @@ def main():
                         player.pick_up(level.dungeon.grid[player.pos[0]][player.pos[1]].contains.pop(-1))
                         moved = True
                 elif event.key == pygame.K_TAB:
-                    for item in player.backpack:
-                        if item.use(enemies=level.all_enemies, level=level, player=player, camera=camera):
-                            player.backpack.remove(item)
-                    print(player.backpack)
+                    inventory.toggle_bag()
                 elif event.key == pygame.K_g:
                     if player.backpack:
                         player.backpack[-1].drop(player, level.dungeon.grid)
@@ -130,22 +131,34 @@ def main():
                     camera.set_size(camera.multiplier - 0.1, 'multiplier')
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-
                 mouse_pos = pygame.mouse.get_pos()
-                current_x, current_y = camera.cx, camera.cy
+                if inventory.opened:
+                    x = inventory.rect.x + 6
+                    y = inventory.rect.y + 26
+                    if 0 < mouse_pos[0] - x < inventory.rect.width - 12 and 0 < mouse_pos[1] - y < inventory.rect.height - 50:
+                        cell_x = (mouse_pos[0] - x) // 40
+                        cell_y = (mouse_pos[1] - y) // 40
+                        bag = inventory.backpack if inventory.current_bag == -1 else inventory.bags[inventory.current_bag]
+                        item = bag.get_or_none((cell_y - 1) * 5 + cell_x)
+                        if item is not None:
+                            print(item.name)
+                else:
+                    current_x, current_y = camera.cx, camera.cy
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                if dragging == 1:
-                    running = True
-                    camera.move_to(*camera.get_cell(*mouse_pos))
-                dragging = 0
+                if not inventory.opened:
+                    if dragging == 1:
+                        running = True
+                        camera.move_to(*camera.get_cell(*mouse_pos))
+                    dragging = 0
 
             if pygame.mouse.get_pressed()[0]:
-                dragging += 1
-                if mouse_pos is not None:
-                    x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
-                    y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
-                    camera.move_to(x, y, 'point')
+                if not inventory.opened:
+                    dragging += 1
+                    if mouse_pos is not None:
+                        x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
+                        y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])
+                        camera.move_to(x, y, 'point')
         if running:
             x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])
             y = current_y + (mouse_pos[1] - pygame.mouse.get_pos()[1])

@@ -14,9 +14,6 @@ class Backpack:
 
     def __repr__(self) -> str:
         return self.__str__()
-    
-    def __getitem__(self, key):
-        return self.items[key]
 
     def __iter__(self):
         return self

@@ -33,6 +33,7 @@ def main():
 
     player.weapon = item_giver('short_sword', 'weapons')
     player.armor = item_giver('cloth_armor', 'armor')
+    player.backpack.pick_up(item_giver('teleport_scroll', 'scrolls'))
     camera = Camera(player, level, SCREEN)
     camera.move_to(*player.pos)
     mouse_pos = (0, 0)
@@ -77,9 +78,11 @@ def main():
                 elif event.key == pygame.K_TAB:
                     for item in player.backpack:
                         if item.use(enemies=level.all_enemies, level=level, player=player, camera=camera):
-                            player.backpack.items.remove(item)
+                            player.backpack.remove(item)
                     print(player.backpack)
-
+                elif event.key == pygame.K_g:
+                    if player.backpack:
+                        player.backpack[-1].drop(player, level.dungeon.grid)
                 if moved:
                     if "ladder" in level.dungeon.grid[player.pos[0]][player.pos[1]].type:
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == "ladder_down":

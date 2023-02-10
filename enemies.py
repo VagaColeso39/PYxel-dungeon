@@ -38,7 +38,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self, other):
         other.hit_hero(random.randint(*self.dmg))
 
-    def hit_self(self, other, damage, all_enemies: list):
+    def hit_self(self, other, damage: int, all_enemies: list):
         damage -= random.randint(*self.defence)
         if damage > 0:
             self.hp -= damage

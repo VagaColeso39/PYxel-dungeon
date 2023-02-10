@@ -54,12 +54,14 @@ class Item:
             return self.cursed
 
     def use(self, level: object = None, enemies: list = None, player: object = None, camera: object = None) -> None:
+        print('try to use')
         if self.effect is not None:
+            print('used')
             if self.effect == 'blinding':
                 for enemy in enemies:
                     if enemy.visible:
                         enemy.blind(10)
-            elif self.effect == 'teleport':
+            elif self.effect == 'teleport':  # teleport use bug (second time use) ?
                 room = random.choice(level.dungeon.rooms)
                 x = random.randint(room.x + 1, room.x + room.width - 1)
                 y = random.randint(room.y + 1, room.y + room.height - 1)
@@ -71,12 +73,30 @@ class Item:
             elif self.effect == 'healing':
                 player.hp = min(player.max_hp, player.hp + player.max_hp // 2)
             elif self.effect == 'fire':
-                player.effects.append((10, 'fire')) # add fire
+                player.effects.append((10, 'fire'))  # add fire
             return True
         return False
 
+    def throw(self, level, enemies, player, tile: object) -> bool:
+        if player.is_visible(level.dungeon.grid, tile):
+            if type(self) == UtilItem and self.throwable:
+                dmg = random.randint(*self.damage)
+            elif type(self) == WeaponItem:
+                dmg = max(1, random.randint(*self.damage) // 3)
+            else:
+                dmg = 1
+            for enemy in enemies:
+                if enemy.x == tile.x and enemy.y == tile.y:
+                    enemy.hit_self(player, dmg, enemies)
+                    break
+            level.dungeon.grid[tile.x][tile.y].contains.append(self)
+            player.backpack.remove(self)
+            return True
+        return False
 
-
+    def drop(self, player, grid: list):
+        grid[player.pos[0]][player.pos[1]].contains.append(self)
+        player.backpack.remove(self)
 
 
 class WeaponItem(Item):

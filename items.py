@@ -4,10 +4,11 @@ import random
 import pygame
 
 
-class Item:
+class Item(pygame.sprite.Sprite):
     def __init__(self, name: str, quantity: int = 1, stackable: bool = False, level: int = 0, cursed: bool = False,
                  cursed_known: bool = False, known: bool = False, essential: bool = False, drop_cost: int = 20):
-        self.source = pygame.image.load(f'sprites/{name}.bmp')
+        pygame.sprite.Sprite.__init__(self)
+        self.source = pygame.image.load(f'assets/sprites/{name}.bmp')
         self.source.set_colorkey((255, 255, 255))
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()

@@ -10,6 +10,7 @@ from player import Player
 from tiles import FloorTile, LadderTile
 from utils.sounds import *
 from items import item_giver
+from inventory import Inventory
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -43,8 +44,11 @@ def main():
     entities_sprites.add(player)
     for enemy in level.all_enemies:
         entities_sprites.add(enemy)
+    
+    inventory = Inventory(SCREEN, player)
+    entities_sprites.add(inventory)
 
-    pygame.mixer.music.load('music/main_theme.wav')
+    pygame.mixer.music.load('assets/music/main_theme.wav')
     pygame.mixer.music.play(-1)
 
     while True:
@@ -75,10 +79,7 @@ def main():
                         player.pick_up(level.dungeon.grid[player.pos[0]][player.pos[1]].contains.pop(-1))
                         moved = True
                 elif event.key == pygame.K_TAB:
-                    for item in player.backpack:
-                        if item.use(enemies=level.all_enemies, level=level, player=player, camera=camera):
-                            player.backpack.items.remove(item)
-                    print(player.backpack)
+                    inventory.toggle_bag()
 
                 if moved:
                     if "ladder" in level.dungeon.grid[player.pos[0]][player.pos[1]].type:

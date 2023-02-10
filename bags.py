@@ -59,6 +59,12 @@ class Backpack:
         for i in self.items:
             if i == item:
                 return i
+    
+    def get_or_none(self, index):
+        try:
+            return self[index]
+        except IndexError:
+            return None
 
     def set_quantity(self, item, quantity):
         self.get_item(item).quantity = quantity

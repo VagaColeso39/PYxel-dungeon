@@ -32,10 +32,16 @@ class Inventory(pygame.sprite.Sprite):
                 elif i >= 1:
                     item = bag.get_or_none((i-1)*5+j)
                     if item is not None:
-                        item.rect.center = rct.center
-                        self.image.blit(item.image, item.rect)
-                        if item.quantity > 1:
-                            FONT.render_to(self.image, rct, item.quantity, (255, 255, 255))
+                        self.render_cell(item, rct)
+                elif i == 0:
+                    if j == 0:
+                        pass  # FIXME
+    
+    def render_cell(self, item, rct):
+        item.rect.center = rct.center
+        self.image.blit(item.image, item.rect)
+        if item.quantity > 1:
+            FONT.render_to(self.image, rct, str(item.quantity), (0, 0, 0))
     
     def open_bag(self):
         self.image = pygame.Surface((210, 250))

@@ -17,15 +17,15 @@ class Inventory(pygame.sprite.Sprite):
         if not self.opened:
             return
         bag = self.backpack if self.current_bag == -1 else self.bags[self.current_bag]
-        self.image.fill((255, 0, 0))
+        self.image.fill((60, 60, 60))
         pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 0, self.rect.width, self.rect.height), 5)
         for i in range(5):
             if i == 0:
-                color = (0, 255, 0)
+                color = (120, 120, 120)
             else:
-                color = (0, 0, 255)
+                color = (90, 90, 90)
             for j in range(5):
-                rct = pygame.Rect(2 + j * 2, 22 + i * 2, 38, 38)
+                rct = pygame.Rect(6 + j * 40, 26 + i * 40, 38, 38)
                 pygame.draw.rect(self.image, color, rct)
                 if bag.capacity == 19 and i == 1 and j == 0:
                     pass

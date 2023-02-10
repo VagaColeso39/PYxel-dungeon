@@ -54,7 +54,7 @@ class Item(pygame.sprite.Sprite):
         if self.cursed_known or self.known:
             return self.cursed
 
-    def use(self, level: object = None, enemies: list = None, player: object = None, camera: object = None) -> None:
+    def use(self, level: object, enemies: list, player: object, camera: object) -> None:
         print('try to use')
         if self.effect is not None:
             print('used')

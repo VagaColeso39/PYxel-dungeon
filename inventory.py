@@ -1,6 +1,7 @@
 import pygame
 from constants_original import FONT
 
+
 class Inventory(pygame.sprite.Sprite):
     def __init__(self, display:pygame.Surface, player) -> None:
         pygame.sprite.Sprite.__init__(self)
@@ -58,6 +59,33 @@ class Inventory(pygame.sprite.Sprite):
         if self.opened:
             self.close_bag()
         else:
-            self.open_bag()       
-        
+            self.open_bag()
+
+
+class HUDChoose(pygame.sprite.Sprite):
+    def __init__(self, display: pygame.Surface, player) -> None:
+        pygame.sprite.Sprite.__init__(self)
+        self.display = display
+        self.image = pygame.Surface((0, 0))
+        self.rect = self.image.get_rect()
+        self._layer = 3
+        self.opened = False
+
+    def update(self):
+        if not self.opened:
+            return
+        self.image.fill((60, 60, 60))
+        pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 0, self.rect.width, self.rect.height), 5)
+
+    def open(self):
+        self.image = pygame.Surface((210, 250))
+        self.rect = self.image.get_rect()
+        self.rect.center = (50, 50)
+        self.update()
+        self.opened = True
+
+    def close(self):
+        self.image = pygame.Surface((0, 0))
+        self.opened = False
+
         

@@ -10,7 +10,7 @@ from player import Player
 from tiles import FloorTile, LadderTile
 from utils.sounds import *
 from items import item_giver
-from inventory import Inventory
+from inventory import Inventory, HUDChoose
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -47,7 +47,10 @@ def main():
         entities_sprites.add(enemy)
 
     inventory = Inventory(SCREEN, player)
+    item_use_hud = HUDChoose(SCREEN, player)
+
     entities_sprites.add(inventory)
+    entities_sprites.add(item_use_hud)
 
     pygame.mixer.music.load('assets/music/main_theme.wav')
     pygame.mixer.music.play(-1)
@@ -141,7 +144,9 @@ def main():
                         bag = inventory.backpack if inventory.current_bag == -1 else inventory.bags[inventory.current_bag]
                         item = bag.get_or_none((cell_y - 1) * 5 + cell_x)
                         if item is not None:
-                            print(item.name)
+                            item_use_hud.open()
+                            if item.use(level, level.all_enemies, player, camera):
+                                inventory.backpack.remove(item)
                 else:
                     current_x, current_y = camera.cx, camera.cy
 

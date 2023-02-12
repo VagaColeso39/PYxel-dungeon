@@ -63,24 +63,36 @@ class Inventory(pygame.sprite.Sprite):
 
 
 class HUDChoose(pygame.sprite.Sprite):
-    def __init__(self, display: pygame.Surface, player) -> None:
+    def __init__(self, display: pygame.Surface) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.display = display
         self.image = pygame.Surface((0, 0))
         self.rect = self.image.get_rect()
         self._layer = 3
         self.opened = False
+        self.x = 0
+        self.y = 0
 
     def update(self):
         if not self.opened:
             return
         self.image.fill((60, 60, 60))
-        pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 0, self.rect.width, self.rect.height), 5)
+        pygame.draw.rect(self.image, (221, 161, 94), pygame.Rect(0, 1, self.rect.width, 30))
+        pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 1, self.rect.width, 30), 1)
+        pygame.draw.rect(self.image, (221, 161, 94), pygame.Rect(0, 33, self.rect.width, 30))
+        pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 33, self.rect.width, 30), 1)
+        pygame.draw.rect(self.image, (221, 161, 94), pygame.Rect(0, 65, self.rect.width, 30))
+        pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 65, self.rect.width, 30), 1)
+        pygame.draw.rect(self.image, (70, 70, 70), pygame.Rect(0, 0, self.rect.width, self.rect.height), 2)
 
-    def open(self):
-        self.image = pygame.Surface((210, 250))
+
+
+    def open(self, pos):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.image = pygame.Surface((50, 96))
         self.rect = self.image.get_rect()
-        self.rect.center = (50, 50)
+        self.rect.center = (self.x + 38, self.y)
         self.update()
         self.opened = True
 

@@ -47,7 +47,7 @@ def main():
         entities_sprites.add(enemy)
 
     inventory = Inventory(SCREEN, player)
-    item_use_hud = HUDChoose(SCREEN, player)
+    item_use_hud = HUDChoose(SCREEN)
 
     entities_sprites.add(inventory)
     entities_sprites.add(item_use_hud)
@@ -144,7 +144,7 @@ def main():
                         bag = inventory.backpack if inventory.current_bag == -1 else inventory.bags[inventory.current_bag]
                         item = bag.get_or_none((cell_y - 1) * 5 + cell_x)
                         if item is not None:
-                            item_use_hud.open()
+                            item_use_hud.open(mouse_pos)
                             if item.use(level, level.all_enemies, player, camera):
                                 inventory.backpack.remove(item)
                 else:

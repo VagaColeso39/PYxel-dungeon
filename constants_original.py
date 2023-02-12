@@ -20,4 +20,6 @@ HP_BAR_COLOR = (147, 229, 171)
 HP_BAR_COLOR_MISSING = (107, 189, 131)
 ENEMY_COLOR = (255, 0, 0)
 GREEN = (0, 255, 0)
+
 FONT = pygame.freetype.Font('assets/fonts/pixel_font.ttf', 10)
+BUTTONS_FONT = pygame.freetype.Font('assets/fonts/pixel_font.ttf', 18)

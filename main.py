@@ -41,6 +41,7 @@ def main():
     current_x, current_y = 0, 0
     dragging = 0
     running = False
+    throwing_flag = False
 
     entities_sprites.add(player)
     for enemy in level.all_enemies:
@@ -135,7 +136,33 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
-                if inventory.opened:
+                if throwing_flag:
+                    throwing_flag = False
+                    x = (mouse_pos[0] + camera.tl_x) // block_size
+                    y = (mouse_pos[1] + camera.tl_y) // block_size
+                    if not item_use_hud.item.throw(level, level.all_enemies, player, level.dungeon.grid[x][y]):
+                        print('you cant throw it there', x, y)
+                    else:
+                        camera.move_to(*player.pos)
+                        for enemy in level.all_enemies:
+                            enemy.turn(level.dungeon.grid, level.dungeon.grid[player.pos[0]][player.pos[1]], player,
+                                       level.maze, block_size, level.all_enemies)
+
+                elif item_use_hud.opened:
+                    item_use_hud.close()
+                    if item_use_hud.x < mouse_pos[0] < item_use_hud.rect.width + item_use_hud.x and item_use_hud.y -48 < mouse_pos[1] < item_use_hud.rect.height + item_use_hud.y - 48:
+                        y = mouse_pos[1] - item_use_hud.y + 48
+                        print(y)
+                        if y <= 31:
+                            if item_use_hud.item.use(level, level.all_enemies, player, camera):
+                                player.backpack.remove(item_use_hud.item)
+                        elif y <= 63:
+                            item_use_hud.item.drop(player, level.dungeon.grid)
+                        elif y <= 95:
+                            print('throw')
+                            inventory.close_bag()
+                            throwing_flag = True
+                elif inventory.opened:
                     x = inventory.rect.x + 6
                     y = inventory.rect.y + 26
                     if 0 < mouse_pos[0] - x < inventory.rect.width - 12 and 0 < mouse_pos[1] - y < inventory.rect.height - 50:
@@ -144,21 +171,20 @@ def main():
                         bag = inventory.backpack if inventory.current_bag == -1 else inventory.bags[inventory.current_bag]
                         item = bag.get_or_none((cell_y - 1) * 5 + cell_x)
                         if item is not None:
-                            item_use_hud.open(mouse_pos)
-                            if item.use(level, level.all_enemies, player, camera):
-                                inventory.backpack.remove(item)
+                            item_use_hud.open(mouse_pos, item)
+
                 else:
                     current_x, current_y = camera.cx, camera.cy
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                if not inventory.opened:
+                if not inventory.opened or throwing_flag:
                     if dragging == 1:
                         running = True
                         camera.move_to(*camera.get_cell(*mouse_pos))
                     dragging = 0
 
-            if pygame.mouse.get_pressed()[0]:
-                if not inventory.opened:
+            elif pygame.mouse.get_pressed()[0]:
+                if not inventory.opened or throwing_flag:
                     dragging += 1
                     if mouse_pos is not None:
                         x = current_x + (mouse_pos[0] - pygame.mouse.get_pos()[0])

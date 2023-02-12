@@ -1,5 +1,5 @@
 import pygame
-from constants_original import FONT
+from constants_original import FONT, BUTTONS_FONT
 
 
 class Inventory(pygame.sprite.Sprite):
@@ -54,7 +54,7 @@ class Inventory(pygame.sprite.Sprite):
     def close_bag(self):
         self.image = pygame.Surface((0, 0))
         self.opened = False
-    
+
     def toggle_bag(self):
         if self.opened:
             self.close_bag()
@@ -70,29 +70,36 @@ class HUDChoose(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self._layer = 3
         self.opened = False
-        self.x = 0
-        self.y = 0
+        self.item = None
+        self.x = -1
+        self.y = -1
 
     def update(self):
         if not self.opened:
             return
         self.image.fill((60, 60, 60))
+
         pygame.draw.rect(self.image, (221, 161, 94), pygame.Rect(0, 1, self.rect.width, 30))
         pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 1, self.rect.width, 30), 1)
+        BUTTONS_FONT.render_to(self.image, pygame.Rect(13, 11, self.rect.width, 30), 'use', (0, 0, 0))
+
         pygame.draw.rect(self.image, (221, 161, 94), pygame.Rect(0, 33, self.rect.width, 30))
         pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 33, self.rect.width, 30), 1)
+        BUTTONS_FONT.render_to(self.image, pygame.Rect(8, 43, self.rect.width, 30), 'drop', (0, 0, 0))
+
         pygame.draw.rect(self.image, (221, 161, 94), pygame.Rect(0, 65, self.rect.width, 30))
         pygame.draw.rect(self.image, (100, 100, 100), pygame.Rect(0, 65, self.rect.width, 30), 1)
+        BUTTONS_FONT.render_to(self.image, pygame.Rect(5, 75, self.rect.width, 30), 'throw', (0, 0, 0))
+
         pygame.draw.rect(self.image, (70, 70, 70), pygame.Rect(0, 0, self.rect.width, self.rect.height), 2)
 
-
-
-    def open(self, pos):
-        self.x = pos[0]
+    def open(self, pos, item):
+        self.x = pos[0] + 40
         self.y = pos[1]
+        self.item = item
         self.image = pygame.Surface((50, 96))
         self.rect = self.image.get_rect()
-        self.rect.center = (self.x + 38, self.y)
+        self.rect.center = (self.x, self.y)
         self.update()
         self.opened = True
 

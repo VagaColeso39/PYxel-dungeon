@@ -79,7 +79,7 @@ class Item(pygame.sprite.Sprite):
         return False
 
     def throw(self, level, enemies, player, tile: object) -> bool:
-        if player.is_visible(level.dungeon.grid, tile):
+        if player.is_visible(level.dungeon.grid, tile) and tile.type in ('floor', 'door'):
             if type(self) == UtilItem and self.throwable:
                 dmg = random.randint(*self.damage)
             elif type(self) == WeaponItem:

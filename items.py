@@ -1,5 +1,6 @@
 import json
 import random
+from constants import LAYER_ITEMS
 
 import pygame
 
@@ -11,6 +12,7 @@ class Item(pygame.sprite.Sprite):
         self.source = pygame.image.load(f'assets/sprites/{name}.bmp')
         self.source.set_colorkey((255, 255, 255))
         self.image = pygame.transform.scale(self.source, (20, 20))
+        self._layer = LAYER_ITEMS
         self.rect = self.image.get_rect()
         self.name = name
         self.drop_cost = drop_cost  # rarity

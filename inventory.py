@@ -1,5 +1,5 @@
 import pygame
-from constants import FONT, BUTTONS_FONT
+from constants import FONT, BUTTONS_FONT, LAYER_HUD
 
 
 class Inventory(pygame.sprite.Sprite):
@@ -8,7 +8,7 @@ class Inventory(pygame.sprite.Sprite):
         self.display = display
         self.image = pygame.Surface((0, 0))
         self.rect = self.image.get_rect()
-        self._layer = 2
+        self._layer = LAYER_HUD
         self.backpack = player.backpack
         self.bags = player.bags
         self.current_bag = -1  # -1 is backpack and other is indexes of `bags`

@@ -6,6 +6,7 @@ from items import item_generator
 from tiles import Tile, FloorTile
 from utils.algorithms import *
 from utils.astar import astar
+from constants import LAYER_ENTITIES
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -19,7 +20,7 @@ class Enemy(pygame.sprite.Sprite):
         self.visible = False
         self.rect = self.image.get_rect()
         self.rect.center = (x * 20, y * 20)
-        self._layer = 1
+        self._layer = LAYER_ENTITIES
         self.hp = hp
         self.vision_field = 6
         self.dmg = dmg

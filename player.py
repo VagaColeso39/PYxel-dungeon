@@ -9,6 +9,7 @@ from tiles import Tile
 from utils.algorithms import *
 from utils.astar import astar
 from utils.sounds import *
+from constants import LAYER_ENTITIES
 
 
 class Player(pygame.sprite.Sprite):
@@ -18,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
         self.rect.center = (start_pos[0] * 20, start_pos[1] * 20)
-        self._layer = 1
+        self._layer = LAYER_ENTITIES
 
         self.level_width = level_width
         self.level_height = level_height

@@ -22,7 +22,8 @@ ENEMY_COLOR = (255, 0, 0)
 GREEN = (0, 255, 0)
 
 LAYER_TILES = 1
-LAYER_ENTITIES = 2
+LAYER_ITEMS = 2
+LAYER_ENTITIES = 3
 LAYER_HUD = 5
 
 FONT = pygame.freetype.Font('assets/fonts/pixel_font.ttf', 10)

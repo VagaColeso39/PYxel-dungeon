@@ -1,5 +1,6 @@
 from typing import Literal
 from typing_extensions import Self
+from constants import LAYER_TILES
 
 import pygame
 
@@ -23,7 +24,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()
         self.size = 20
-        self._layer = 0
+        self._layer = LAYER_TILES
         self._update()
 
     def change_tile(self, tile_class: Self):

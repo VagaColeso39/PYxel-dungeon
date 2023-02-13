@@ -6,6 +6,8 @@ import pygame
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, dungeon, x, y, type: Literal['floor', 'wall', 'earth', 'door']):
+        pygame.sprite.Sprite.__init__(self)
+        
         self.explored = False
         self.visible = False
         self.dungeon = dungeon
@@ -17,9 +19,33 @@ class Tile(pygame.sprite.Sprite):
         self.fire = True
         self.can_burn = True  # i can't think of anything better
         self.contains = [] # items
+        self.source = pygame.image.load(f'assets/sprites/empty_cell.png')
+        self.image = pygame.transform.scale(self.source, (20, 20))
+        self.rect = self.image.get_rect()
+        self.size = 20
+        self._layer = 0
+        self._update()
 
     def change_tile(self, tile_class: Self):
+        self.hide()
         return tile_class(self.dungeon, self.x, self.y)
+    
+    def explore(self):
+        self.source = pygame.image.load(f'assets/sprites/simple_{self.type}.bmp')
+        self.image = pygame.transform.scale(self.source, (self.size, self.size))
+    
+    def hide(self):
+        self.source = pygame.image.load(f'assets/sprites/empty_cell.png')
+        self.image = pygame.transform.scale(self.source, (0, 0))
+    
+    def _update(self):
+        if self.visible:
+            self.explore()
+        else:
+            self.hide()
+    
+    def resize(self, num):
+        self.size = num
 
 
 class FloorTile(Tile):

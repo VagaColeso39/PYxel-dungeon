@@ -1,7 +1,7 @@
 import pygame
 from player import Player
 from level import Level
-from constants_original import *
+from constants import *
 from typing import Literal
 from utils.easing import CubicEaseOut
 
@@ -33,7 +33,7 @@ class Camera:
                 
                 color = EARTH_COLOR
                 if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
-                    self.level.dungeon.grid[x][y].visible = True
+                    '''self.level.dungeon.grid[x][y].visible = True
                     if self.level.dungeon.grid[x][y].type == 'earth':
                         color = EARTH_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'floor':
@@ -45,10 +45,11 @@ class Camera:
                     elif self.level.dungeon.grid[x][y].type == "ladder_down":
                         color = LADDER_DOWN_COLOR
                     elif self.level.dungeon.grid[x][y].type == "ladder_up":
-                        color = LADDER_UP_COLOR
+                        color = LADDER_UP_COLOR'''
+                    self.level.dungeon.grid[x][y].explore()
 
                 elif self.level.dungeon.grid[x][y].visible or self.level.dungeon.grid[x][y].explored:
-                    self.level.dungeon.grid[x][y].explored = True
+                    '''self.level.dungeon.grid[x][y].explored = True
                     self.level.dungeon.grid[x][y].visible = False
                     if self.level.dungeon.grid[x][y].type == 'earth':
                         color = EARTH_COLOR_FADED
@@ -61,15 +62,15 @@ class Camera:
                     elif self.level.dungeon.grid[x][y].type == "ladder_down":
                         color = LADDER_DOWN_COLOR_FADED
                     elif self.level.dungeon.grid[x][y].type == "ladder_up":
-                        color = LADDER_UP_COLOR_FADED
+                        color = LADDER_UP_COLOR_FADED'''
+                    self.level.dungeon.grid[x][y].explore()
                 else:
                     color = EMPTY_COLOR
                 
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
-                pygame.draw.rect(self.screen, color, cell)
-                if color not in [PLAYER_COLOR, EMPTY_COLOR, ENEMY_COLOR]:
-                    pygame.draw.rect(self.screen, GRAY_BORDER, cell, 1)
+                self.level.dungeon.grid[x][y].rect.x = cell[0]
+                self.level.dungeon.grid[x][y].rect.y = cell[1]
 
                 if self.level.dungeon.grid[x][y].contains and self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
                     for item in self.level.dungeon.grid[x][y].contains:
@@ -139,6 +140,10 @@ class Camera:
         elif type == 'multiplier' and self.max_block_size >= self.dft_block_size * num >= self.min_block_size:
             self.multiplier = num
             self.block_size = int(self.dft_block_size * self.multiplier)
+        for i in self.level.dungeon.grid:
+            for j in i:
+                j.resize(self.block_size)
         self.move_to(self.cx, self.cy, 'point')
+
     def get_cell(self, x, y):
         return (x + self.tl_x) // self.block_size, (y + self.tl_y) // self.block_size

@@ -4,7 +4,7 @@ import sys
 import pygame
 
 from camera import Camera
-from constants_original import *
+from constants import *
 from level import Level
 from player import Player
 from tiles import FloorTile, LadderTile
@@ -22,6 +22,9 @@ block_size = 20
 
 level = Level(multiplier, chance_for_door, 1, block_size)
 levels = [level]
+for i in level.dungeon.grid:
+    for j in i:
+        entities_sprites.add(j)
 
 SCREEN = pygame.display.set_mode((500, 500))
 CLOCK = pygame.time.Clock()

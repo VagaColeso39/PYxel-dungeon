@@ -115,7 +115,8 @@ class Player(pygame.sprite.Sprite):
         if self.grid[self.pos[0]][self.pos[1]].type != 'door':
             if self.grid[self.pos[0]][self.pos[1]].type == 'earth':
                 pygame.mixer.Sound.play(dig_sound)
-                self.grid[self.pos[0]][self.pos[1]] = self.grid[self.pos[0]][self.pos[1]].change_tile(FloorTile)
+                self.grid[self.pos[0]][self.pos[1]] = FloorTile(self.grid[self.pos[0]][self.pos[1]].dungeon, self.pos[0], self.pos[1])
+                self.grid[self.pos[0]][self.pos[1]]._update()
             else:
                 pygame.mixer.Sound.play(step_sound)
         else:

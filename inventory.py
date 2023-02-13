@@ -1,5 +1,5 @@
 import pygame
-from constants_original import FONT, BUTTONS_FONT
+from constants import FONT, BUTTONS_FONT
 
 
 class Inventory(pygame.sprite.Sprite):

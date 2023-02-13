@@ -106,7 +106,7 @@ def main():
                         entities_sprites.add(player)
                         for enemy in level.all_enemies:
                             entities_sprites.add(enemy)
-
+                        entities_sprites.add(inventory)
                         camera = Camera(player, level, SCREEN)
                         camera.move_to(*player.pos)
 

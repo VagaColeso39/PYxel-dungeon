@@ -29,8 +29,9 @@ class Enemy(pygame.sprite.Sprite):
         self.item_drop_cost = item_drop_cost
         self.x = x
         self.y = y
-
+        self.last_player_pos = None
         self.blind_counter = 0
+        self.player_seen = False
 
     def blind(self, time: int = 10):
         self.blind_counter += time
@@ -63,6 +64,10 @@ class Enemy(pygame.sprite.Sprite):
                 self.attack(player)
             else:
                 self.move(player_cell.x, player_cell.y, maze, block_size, grid, player, all_enemies)
+
+        elif self.last_player_pos is not None:
+            self.move(self.last_player_pos[0], self.last_player_pos[1], maze, block_size, grid, player, all_enemies)
+
         else:
             self.move_step(grid, all_enemies, random.choice(('x-', 'x+', 'y-', 'y+')), block_size, player)
 
@@ -71,6 +76,7 @@ class Enemy(pygame.sprite.Sprite):
             if all([(grid[x][y].type not in ('earth', 'wall', 'door') or (
                     grid[x][y].type == 'door' and grid[x][y].opened)) for x, y in
                     bresenham(self.x, self.y, cell.x, cell.y)][:-1]):
+                self.last_player_pos = (cell.x, cell.y)
                 return True
         return False
 
@@ -104,9 +110,12 @@ class Enemy(pygame.sprite.Sprite):
                 self.y += 1
             else:
                 self.attack(player)
+
         if grid[self.x][self.y].type == 'earth':
             grid[self.x][self.y] = grid[self.x][self.y].change_tile(FloorTile)
 
+        if self.last_player_pos == (self.x, self.y):
+            self.last_player_pos = None
         return True
 
     def move(self, x, y, maze, block_size, grid, player, all_enemies):

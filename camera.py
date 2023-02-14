@@ -33,7 +33,8 @@ class Camera:
                 
                 color = EARTH_COLOR
                 if self.player.is_visible(self.level.dungeon.grid, self.level.dungeon.grid[x][y]):
-                    '''self.level.dungeon.grid[x][y].visible = True
+                    self.level.dungeon.grid[x][y].visible = True
+                    '''
                     if self.level.dungeon.grid[x][y].type == 'earth':
                         color = EARTH_COLOR
                     elif self.level.dungeon.grid[x][y].type == 'floor':
@@ -66,7 +67,7 @@ class Camera:
                     self.level.dungeon.grid[x][y].explore()
                 else:
                     color = EMPTY_COLOR
-                
+
                 cell = pygame.Rect(int(x * self.block_size - self.tl_x), int(y * self.block_size - self.tl_y), self.block_size, self.block_size)
 
                 self.level.dungeon.grid[x][y].rect.x = cell[0]

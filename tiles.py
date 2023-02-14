@@ -19,7 +19,7 @@ class Tile(pygame.sprite.Sprite):
         self.gases = True  # like poisonous gas or freezing
         self.fire = True
         self.can_burn = True  # i can't think of anything better
-        self.contains = [] # items
+        self.contains = []  # items
         self.source = pygame.image.load(f'assets/sprites/empty_cell.png')
         self.image = pygame.transform.scale(self.source, (20, 20))
         self.rect = self.image.get_rect()

@@ -10,10 +10,10 @@ from constants import LAYER_ENTITIES
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'rat',
+    def __init__(self, hp=10, dmg: tuple[int, int] = (0, 2), x: int = 0, y: int = 0, name: str = 'enemy_rat',
                  xp_contains: int = 3, item_drop_cost: tuple[int, int] = (20, 35), defence: tuple[int, int] = (0, 2)):
         pygame.sprite.Sprite.__init__(self)
-        self.source = pygame.image.load('assets/sprites/enemy_knight.bmp')  # enemy.png
+        self.source = pygame.image.load(f'assets/sprites/{name}.bmp')  # enemy.bmp
         self.source.set_colorkey((255, 255, 255))
         self.empty_sprite = pygame.image.load('assets/sprites/empty_sprite.jpg')
         self.image = pygame.transform.scale(self.source, (20, 20))

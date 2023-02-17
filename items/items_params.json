@@ -21,7 +21,7 @@
       "is_double_handed": true,
       "range": 2,
       "is_ranged": false,
-      "drop_cost": 80,
+      "drop_cost": 65,
       "drop_chance": 0.5
     }
   },
@@ -38,7 +38,7 @@
     },
     "metal_armor": {
       "defence": [4, 6],
-      "drop_cost": 80,
+      "drop_co  st": 65,
       "drop_chance": 0.5
     }
   },

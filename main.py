@@ -72,6 +72,11 @@ def main():
                     pygame.quit()
                     sys.exit()
                 moved = False
+                if event.key == pygame.K_BACKQUOTE:
+                    cmd = input().split()
+                    if cmd[0] == 'drop':
+                        thing = exec(cmd[1])
+                        level.dungeon.grid[player.pos[0]][player.pos[1]].contains.append(thing)
                 if event.key in [pygame.K_UP, pygame.K_w]:
                     moved = player.move_step((player.pos[0], player.pos[1] - 1), level.all_enemies, 'y-', block_size)
                 elif event.key in [pygame.K_s, pygame.K_DOWN]:

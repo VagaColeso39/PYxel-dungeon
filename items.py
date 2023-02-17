@@ -71,8 +71,9 @@ class Item(pygame.sprite.Sprite):
                 player.pos = [x, y]
                 camera.move_to(*player.pos)
             elif self.effect == 'map_explore':
-                for cell in level.dungeon.grid:
-                    cell.explored = True
+                for line in level.dungeon.grid:
+                    for cell in line:
+                        cell.explored = True
             elif self.effect == 'healing':
                 player.hp = min(player.max_hp, player.hp + player.max_hp // 2)
             elif self.effect == 'fire':

@@ -9,6 +9,7 @@ class Inventory(pygame.sprite.Sprite):
         self.image = pygame.Surface((0, 0))
         self.rect = self.image.get_rect()
         self._layer = LAYER_HUD
+        self.player = player
         self.backpack = player.backpack
         self.bags = player.bags
         self.current_bag = -1  # -1 is backpack and other is indexes of `bags`
@@ -36,7 +37,9 @@ class Inventory(pygame.sprite.Sprite):
                         self.render_cell(item, rct)
                 elif i == 0:
                     if j == 0:
-                        pass  # FIXME
+                        self.render_cell(self.player.weapon, rct) if self.player.weapon is not None else None
+                    elif j == 1:
+                        self.render_cell(self.player.armor, rct) if self.player.armor is not None else None
     
     def render_cell(self, item, rct):
         item.rect.center = rct.center
@@ -68,7 +71,7 @@ class HUDChoose(pygame.sprite.Sprite):
         self.display = display
         self.image = pygame.Surface((0, 0))
         self.rect = self.image.get_rect()
-        self._layer = 3
+        self._layer = 5
         self.opened = False
         self.item = None
         self.x = -1

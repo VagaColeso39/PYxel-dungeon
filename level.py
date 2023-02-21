@@ -55,7 +55,7 @@ class Level:
         for i in range(1, self.room_amount - self.closed_rooms_amount - 1):
             x = random.randint(self.dungeon.rooms[i].x + 1, self.dungeon.rooms[i].x + self.dungeon.rooms[i].width - 1)
             y = random.randint(self.dungeon.rooms[i].y + 1, self.dungeon.rooms[i].y + self.dungeon.rooms[i].height - 1)
-            enemy = random.choices((Enemy(x=x, y=y, name='enemy_slime'), Enemy(x=x, y=y, name='enemy_knight', dmg=(2, 4), defence=(2, 4), xp_contains=6, item_drop_cost=(40, 70))), cum_weights=(3, self.num), k=1)[0]
+            enemy = random.choices((Enemy(x=x, y=y, name='enemy_slime'), Enemy(x=x, y=y, name='enemy_knight', dmg=(2, 4), defence=(2, 4), xp_contains=6, item_drop_cost=(40, 70))), weights=(3, self.num), k=1)[0]
             self.all_enemies.append(enemy)
 
     @property

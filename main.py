@@ -33,6 +33,20 @@ SCREEN.fill(EMPTY_COLOR)
 pygame.mixer.music.load('assets/music/main_theme.wav')
 pygame.mixer.music.play(-1)
 
+def initialize():
+    global layers, entities_sprites, multiplier, level, levels
+    layers = pygame.sprite.LayeredUpdates()
+    entities_sprites = pygame.sprite.Group()
+
+    multiplier = random.randint(55, 60)
+
+    level = Level(multiplier, chance_for_door, 1, block_size)
+    levels = [level]
+    for i in level.dungeon.grid:
+        for j in i:
+            entities_sprites.add(j)
+
+
 def game_intro():
     logo = pygame.transform.scale(pygame.image.load('assets/sprites/logo.png'), (323, 175))
     start = pygame.transform.scale(pygame.image.load('assets/sprites/start_text.png'), (120, 40))
@@ -48,7 +62,9 @@ def game_intro():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if 350 > event.pos[0] > 150:
                     if 250 < event.pos[1] < 300:
+                        initialize()
                         start_game()
+                        alpha = 0
                     elif 325 < event.pos[1] < 375:
                         pass
                     elif 400 < event.pos[1] < 450:
@@ -66,10 +82,39 @@ def game_intro():
         SCREEN.blit(records, (160, 330))
         SCREEN.blit(quit_text, (210, 405))
         if alpha > 0:
-            s = pygame.Surface((1000,750), pygame.SRCALPHA)
+            s = pygame.Surface((500, 500), pygame.SRCALPHA)
             s.fill((0, 0, 0, alpha))
             SCREEN.blit(s, (0,0))
             alpha -= 1
+        pygame.display.update()
+
+
+def game_over():
+    old = SCREEN
+    game_over_text = pygame.transform.scale(pygame.image.load('assets/sprites/game_over.png'), (350, 57))
+    menu = pygame.transform.scale(pygame.image.load('assets/sprites/menu.png'), (115, 40))
+    alpha = 0
+    while True:
+        CLOCK.tick_busy_loop(60)
+        s = pygame.Surface((500, 500))
+        s.set_alpha(alpha)
+        s.fill((0, 0, 0))  
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if 350 > event.pos[0] > 150:
+                    if 325 < event.pos[1] < 375:
+                        return
+        SCREEN.blit(old, (0, 0))
+        s.blit(game_over_text, (80, 100))
+        pygame.draw.rect(s, (160, 170, 150), pygame.Rect(150, 325, 200, 50))
+        pygame.draw.rect(s, (90, 100, 80), pygame.Rect(152, 327, 196, 46))
+        s.blit(menu, (194, 330))
+        SCREEN.blit(s, (0,0))
+        if alpha < 255:
+            alpha += 1
         pygame.display.update()
 
 def start_game():
@@ -256,7 +301,8 @@ def start_game():
 
         if player.hp <= 0:
             print("GAME OVER")
-            break
+            game_over()
+            return
 
 
 if __name__ == "__main__":

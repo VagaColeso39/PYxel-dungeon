@@ -22,6 +22,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = (x * 20, y * 20)
         self._layer = LAYER_ENTITIES
         self.hp = hp
+        self.max_hp = hp
         self.vision_field = 6
         self.dmg = dmg
         self.defence = defence
@@ -48,6 +49,8 @@ class Enemy(pygame.sprite.Sprite):
             # other.level_up
             other.xp += self.xp_contains
             item = item_generator(random.randint(*self.item_drop_cost))
+            other.score += self.max_hp
+
             if item:  # may drop nothing
                 print('drop', item)
                 other.grid[self.x][self.y].contains.append(item)

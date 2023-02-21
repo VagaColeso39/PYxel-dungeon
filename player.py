@@ -54,6 +54,8 @@ class Player(pygame.sprite.Sprite):
         self.keys = 100  # FIX
         self.maze = []
 
+        self.score = 0
+
         self.max_hp = 20
         self.hp = self.max_hp
 

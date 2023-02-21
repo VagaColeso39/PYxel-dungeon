@@ -18,6 +18,7 @@ entities_sprites = pygame.sprite.Group()
 
 multiplier = random.randint(55, 60)
 chance_for_door = 100
+player = None
 block_size = 20
 
 level = Level(multiplier, chance_for_door, 1, block_size)
@@ -33,13 +34,15 @@ SCREEN.fill(EMPTY_COLOR)
 pygame.mixer.music.load('assets/music/main_theme.wav')
 pygame.mixer.music.play(-1)
 
+
 def initialize():
-    global layers, entities_sprites, multiplier, level, levels
+    global layers, entities_sprites, multiplier, level, levels, player
     layers = pygame.sprite.LayeredUpdates()
     entities_sprites = pygame.sprite.Group()
 
     multiplier = random.randint(55, 60)
 
+    player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
     level = Level(multiplier, chance_for_door, 1, block_size)
     levels = [level]
     for i in level.dungeon.grid:
@@ -90,10 +93,13 @@ def game_intro():
 
 
 def game_over():
+    BUTTONS_FONT = pygame.freetype.Font('assets/fonts/pixel_font.ttf', 26)
     old = SCREEN
     game_over_text = pygame.transform.scale(pygame.image.load('assets/sprites/game_over.png'), (350, 57))
     menu = pygame.transform.scale(pygame.image.load('assets/sprites/menu.png'), (115, 40))
     alpha = 0
+    text = BUTTONS_FONT.render(f"score:{player.score}", True, (255, 255, 255))
+
     while True:
         CLOCK.tick_busy_loop(60)
         s = pygame.Surface((500, 500))
@@ -112,6 +118,7 @@ def game_over():
         pygame.draw.rect(s, (160, 170, 150), pygame.Rect(150, 325, 200, 50))
         pygame.draw.rect(s, (90, 100, 80), pygame.Rect(152, 327, 196, 46))
         s.blit(menu, (194, 330))
+        s.blit(text[0], (410, 10))
         SCREEN.blit(s, (0,0))
         if alpha < 255:
             alpha += 1
@@ -184,6 +191,7 @@ def start_game():
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == "ladder_down":
                             if level.num == len(levels):  # if it is the last level currently
                                 levels.append(Level(multiplier, chance_for_door, level.num + 1, block_size))
+                                player.score += 80
                             level = levels[level.num]
                         else:
                             level = levels[level.num - 2]

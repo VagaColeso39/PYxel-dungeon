@@ -30,8 +30,49 @@ SCREEN = pygame.display.set_mode((500, 500))
 CLOCK = pygame.time.Clock()
 SCREEN.fill(EMPTY_COLOR)
 
+pygame.mixer.music.load('assets/music/main_theme.wav')
+pygame.mixer.music.play(-1)
 
-def main():
+def game_intro():
+    logo = pygame.transform.scale(pygame.image.load('assets/sprites/logo.png'), (323, 175))
+    start = pygame.transform.scale(pygame.image.load('assets/sprites/start_text.png'), (120, 40))
+    records = pygame.transform.scale(pygame.image.load('assets/sprites/records_text.png'), (183, 40))
+    quit_text = pygame.transform.scale(pygame.image.load('assets/sprites/quit_text.png'), (92, 40))
+    alpha = 255
+    while True:
+        CLOCK.tick_busy_loop(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if 350 > event.pos[0] > 150:
+                    if 250 < event.pos[1] < 300:
+                        start_game()
+                    elif 325 < event.pos[1] < 375:
+                        pass
+                    elif 400 < event.pos[1] < 450:
+                        pygame.quit()
+                        quit()
+        SCREEN.fill((0, 0, 0))
+        SCREEN.blit(logo, (89, 38))
+        pygame.draw.rect(SCREEN, (160, 170, 150), pygame.Rect(150, 250, 200, 50))
+        pygame.draw.rect(SCREEN, (160, 170, 150), pygame.Rect(150, 325, 200, 50))
+        pygame.draw.rect(SCREEN, (160, 170, 150), pygame.Rect(150, 400, 200, 50))
+        pygame.draw.rect(SCREEN, (90, 100, 80), pygame.Rect(152, 252, 196, 46))
+        pygame.draw.rect(SCREEN, (90, 100, 80), pygame.Rect(152, 327, 196, 46))
+        pygame.draw.rect(SCREEN, (90, 100, 80), pygame.Rect(152, 402, 196, 46))
+        SCREEN.blit(start, (192, 255))
+        SCREEN.blit(records, (160, 330))
+        SCREEN.blit(quit_text, (210, 405))
+        if alpha > 0:
+            s = pygame.Surface((1000,750), pygame.SRCALPHA)
+            s.fill((0, 0, 0, alpha))
+            SCREEN.blit(s, (0,0))
+            alpha -= 1
+        pygame.display.update()
+
+def start_game():
     global level
     player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
 
@@ -55,9 +96,6 @@ def main():
 
     entities_sprites.add(inventory)
     entities_sprites.add(item_use_hud)
-
-    pygame.mixer.music.load('assets/music/main_theme.wav')
-    pygame.mixer.music.play(-1)
 
     while True:
         CLOCK.tick_busy_loop(60)
@@ -222,4 +260,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        game_intro()

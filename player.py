@@ -149,3 +149,14 @@ class Player(pygame.sprite.Sprite):
         if len(self.path) == 0:
             return False
         return True
+    
+    def collide(self, other):
+        if self.pos[0] + self.block_size > other.pos[0]:
+            return True
+        if self.pos[1] + self.block_size > other.pos[1]:
+            return True
+        if other.pos[0] + other.block_size > self.pos[0]:
+            return True
+        if other.pos[1] + other.block_size > self.pos[1]:
+            return True
+        return False

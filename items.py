@@ -13,6 +13,7 @@ class Item(pygame.sprite.Sprite):
         self.source.set_colorkey((255, 255, 255))
         self.image = pygame.transform.scale(self.source, (20, 20))
         self._layer = LAYER_ITEMS
+        self.id = random.randint(1, 10000000000000)
         self.rect = self.image.get_rect()
         self.name = name
         self.drop_cost = drop_cost  # rarity
@@ -39,6 +40,9 @@ class Item(pygame.sprite.Sprite):
 
     def __ne__(self, other) -> bool:
         return not self.check_similarity(other)
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.quantity, self.level, self.id))
 
     def can_stack(self, other) -> bool:
         return self.stackable and self == other

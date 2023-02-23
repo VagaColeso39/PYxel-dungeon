@@ -14,7 +14,7 @@ from inventory import Inventory, HUDChoose
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
-entities_sprites = pygame.sprite.Group()
+entities_sprites = pygame.sprite.LayeredUpdates()
 
 multiplier = random.randint(55, 60)
 chance_for_door = 100
@@ -38,7 +38,7 @@ pygame.mixer.music.play(-1)
 def initialize():
     global layers, entities_sprites, multiplier, level, levels, player
     layers = pygame.sprite.LayeredUpdates()
-    entities_sprites = pygame.sprite.Group()
+    entities_sprites = pygame.sprite.LayeredUpdates()
 
     multiplier = random.randint(55, 60)
 
@@ -69,7 +69,7 @@ def game_intro():
                         start_game()
                         alpha = 0
                     elif 325 < event.pos[1] < 375:
-                        pass
+                        records_screen()
                     elif 400 < event.pos[1] < 450:
                         pygame.quit()
                         quit()
@@ -89,6 +89,19 @@ def game_intro():
             s.fill((0, 0, 0, alpha))
             SCREEN.blit(s, (0,0))
             alpha -= 1
+        pygame.display.update()
+
+
+def records_screen():
+    while True:
+        CLOCK.tick_busy_loop(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        SCREEN.fill((0, 0, 0))
         pygame.display.update()
 
 
@@ -180,13 +193,17 @@ def start_game():
                     moved = True
                 elif event.key == pygame.K_e:
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].contains:
-                        player.pick_up(level.dungeon.grid[player.pos[0]][player.pos[1]].contains.pop(-1))
+                        item = level.dungeon.grid[player.pos[0]][player.pos[1]].contains.pop(-1)
+                        player.pick_up(item)
+                        item.kill()
                         moved = True
                 elif event.key == pygame.K_TAB:
                     inventory.toggle_bag()
                 elif event.key == pygame.K_g:
                     if player.backpack:
-                        player.backpack[-1].drop(player, level.dungeon.grid)
+                        item = player.backpack[-1]
+                        item.drop(player, level.dungeon.grid)
+                        entities_sprites.add(item)
                 if moved:
                     if "ladder" in level.dungeon.grid[player.pos[0]][player.pos[1]].type:
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == "ladder_down":
@@ -215,12 +232,14 @@ def start_game():
 
                         player.grid = level.dungeon.grid
                         player.pos = level.start_pos
-
+                    print(entities_sprites)
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == 'earth':
                             pygame.mixer.Sound.play(dig_sound)
                             level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][
                                 player.pos[1]].change_tile(FloorTile)
+                            '''camera.update_level(level)'''
+                            entities_sprites.add(level.dungeon.grid[player.pos[0]][player.pos[1]])
                         else:
                             pygame.mixer.Sound.play(step_sound)
                     else:

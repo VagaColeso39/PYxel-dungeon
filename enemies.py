@@ -54,6 +54,7 @@ class Enemy(pygame.sprite.Sprite):
             if item:  # may drop nothing
                 print('drop', item)
                 other.grid[self.x][self.y].contains.append(item)
+                self.groups()[0].add(item)
             all_enemies.remove(self)
             self.kill()
 

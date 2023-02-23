@@ -38,7 +38,7 @@
     },
     "metal_armor": {
       "defence": [4, 6],
-      "drop_co  st": 65,
+      "drop_cost": 65,
       "drop_chance": 0.5
     }
   },

@@ -27,8 +27,8 @@ class Tile(pygame.sprite.Sprite):
         self._layer = LAYER_TILES
         self._update()
 
-    def change_tile(self, tile_class: Self):
-        self.hide()
+    def change_tile(self, tile_class: Self) -> Self:
+        self.kill()
         return tile_class(self.dungeon, self.x, self.y)
     
     def explore(self):

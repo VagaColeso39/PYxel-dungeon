@@ -232,13 +232,11 @@ def start_game():
 
                         player.grid = level.dungeon.grid
                         player.pos = level.start_pos
-                    print(entities_sprites)
                     if level.dungeon.grid[player.pos[0]][player.pos[1]].type != 'door':
                         if level.dungeon.grid[player.pos[0]][player.pos[1]].type == 'earth':
                             pygame.mixer.Sound.play(dig_sound)
                             level.dungeon.grid[player.pos[0]][player.pos[1]] = level.dungeon.grid[player.pos[0]][
                                 player.pos[1]].change_tile(FloorTile)
-                            '''camera.update_level(level)'''
                             entities_sprites.add(level.dungeon.grid[player.pos[0]][player.pos[1]])
                         else:
                             pygame.mixer.Sound.play(step_sound)

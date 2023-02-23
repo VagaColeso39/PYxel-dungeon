@@ -148,6 +148,3 @@ class Camera:
 
     def get_cell(self, x, y):
         return (x + self.tl_x) // self.block_size, (y + self.tl_y) // self.block_size
-    
-    def update_level(self, level):
-        self.level.gungeon.grid = level.dungeon.grid

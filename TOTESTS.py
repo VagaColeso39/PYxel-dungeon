@@ -1,1 +1,0 @@
-print(issubclass(bool, int))

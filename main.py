@@ -214,7 +214,7 @@ def start_game():
                         else:
                             level = levels[level.num - 2]
 
-                        level.start_room.room_type = "start"
+                        level.start_room.room_type = "start"  # BUG this change ladder down to up if you go up
                         if level.num != 1:
                             level.dungeon.grid[level.start_pos[0]][level.start_pos[1]] = \
                                 LadderTile(level.dungeon, level.start_pos[0], level.start_pos[1], 'up')
@@ -227,6 +227,7 @@ def start_game():
                             for cell in line:
                                 entities_sprites.add(cell)
                         entities_sprites.add(inventory)
+                        entities_sprites.add(item_use_hud)
                         camera = Camera(player, level, SCREEN)
                         camera.move_to(*player.pos)
 

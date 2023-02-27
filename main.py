@@ -11,6 +11,7 @@ from tiles import FloorTile, LadderTile
 from utils.sounds import *
 from items import item_giver
 from inventory import Inventory, HUDChoose
+from text_painting import num_painting
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -111,7 +112,13 @@ def game_over():
     game_over_text = pygame.transform.scale(pygame.image.load('assets/sprites/game_over.png'), (350, 57))
     menu = pygame.transform.scale(pygame.image.load('assets/sprites/menu.png'), (115, 40))
     alpha = 0
-    text = BUTTONS_FONT.render(f"score:{player.score}", True, (255, 255, 255))
+    #text = BUTTONS_FONT.render(f"Score: {player.score}", False, (255, 0, 0))
+    nums = num_painting(str(player.score))
+    score = pygame.transform.scale(pygame.image.load('assets/sprites/score.png'), (186, 50))
+    fin = pygame.Surface((196+nums.get_width(), 50))
+    fin.blit(score, (0, 0))
+    fin.blit(nums, (196, 0))
+    score = fin
 
     while True:
         CLOCK.tick_busy_loop(60)
@@ -131,14 +138,15 @@ def game_over():
         pygame.draw.rect(s, (160, 170, 150), pygame.Rect(150, 325, 200, 50))
         pygame.draw.rect(s, (90, 100, 80), pygame.Rect(152, 327, 196, 46))
         s.blit(menu, (194, 330))
-        s.blit(text[0], (410, 10))
+        #s.blit(text[0], (410, 10))
+        s.blit(score, ((500-score.get_width())//2, 210))
         SCREEN.blit(s, (0,0))
         if alpha < 255:
             alpha += 1
         pygame.display.update()
 
 def start_game():
-    global level
+    global level, player
     player = Player(level.start_pos, level.level_width, level.level_height, level.dungeon.grid)
 
     player.weapon = item_giver('short_sword', 'weapons')
@@ -327,7 +335,7 @@ def start_game():
         pygame.display.update()
 
         if player.hp <= 0:
-            print("GAME OVER")
+            print(f"GAME OVER, score {player.score}")
             game_over()
             return
 

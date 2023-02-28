@@ -12,6 +12,8 @@ from utils.sounds import *
 from items import item_giver
 from inventory import Inventory, HUDChoose
 from text_painting import num_painting
+import json
+import datetime
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -49,6 +51,18 @@ def initialize():
     for i in level.dungeon.grid:
         for j in i:
             entities_sprites.add(j)
+
+
+def save_record():
+    global player
+    record = {'score': player.score, 'date': str(datetime.date.today())}
+    with open('records.json', 'r') as json_file:
+        json_file = json.loads(json_file.readline())
+    json_file.append(record)
+    json_file = list(sorted(json_file, key=lambda x: -x['score']))[:5]
+    with open('records.json', 'w') as file:
+        file.write(json.dumps(json_file))
+    print('saved')
 
 
 def game_intro():
@@ -94,6 +108,8 @@ def game_intro():
 
 
 def records_screen():
+    with open('records.json', 'r') as file:
+        records = json.loads(file.readline())
     while True:
         CLOCK.tick_busy_loop(60)
         for event in pygame.event.get():
@@ -103,17 +119,25 @@ def records_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 return
         SCREEN.fill((0, 0, 0))
+        for i, v in enumerate(records):
+            nm = num_painting(f'{i+1}.', 30)
+            SCREEN.blit(nm, (60-nm.get_width(), 200+40*i))
+            date = num_painting(v['date'].replace('-', '.')[2:], 30)
+            SCREEN.blit(date, (310-date.get_width(), 200+40*i))
+            score = num_painting(str(v['score']), 30)
+            SCREEN.blit(score, (480-score.get_width(), 200+40*i))
         pygame.display.update()
 
 
 def game_over():
+    save_record() 
     BUTTONS_FONT = pygame.freetype.Font('assets/fonts/pixel_font.ttf', 26)
     old = SCREEN
     game_over_text = pygame.transform.scale(pygame.image.load('assets/sprites/game_over.png'), (350, 57))
     menu = pygame.transform.scale(pygame.image.load('assets/sprites/menu.png'), (115, 40))
     alpha = 0
     #text = BUTTONS_FONT.render(f"Score: {player.score}", False, (255, 0, 0))
-    nums = num_painting(str(player.score))
+    nums = num_painting(str(player.score), 50)
     score = pygame.transform.scale(pygame.image.load('assets/sprites/score.png'), (186, 50))
     fin = pygame.Surface((196+nums.get_width(), 50))
     fin.blit(score, (0, 0))

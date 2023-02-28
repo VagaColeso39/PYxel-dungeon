@@ -15,7 +15,6 @@ class Level:
             else:
                 error_counter += 1
             if error_counter >= 100000:
-                print(f"Cant generate room! {creator_counter} from {self.room_amount} of rooms is generated")
                 self.room_amount -= 1
                 self.dungeon = dungeonGenerator.dungeonGenerator(self.level_height, self.level_width, self.block_size)
                 self.room_creator()
@@ -41,7 +40,6 @@ class Level:
         x = random.randint(self.dungeon.rooms[-1].x + 1, self.dungeon.rooms[-1].x + self.dungeon.rooms[-1].width - 1)
         y = random.randint(self.dungeon.rooms[-1].y + 1, self.dungeon.rooms[-1].y + self.dungeon.rooms[-1].height - 1)
         self.dungeon.grid[x][y] = LadderTile(self.dungeon, x, y, 'down')
-        print(x, y)
 
         self.closed_rooms_amount = random.randint(1, 2)
         for i in range(1, self.closed_rooms_amount + 1):

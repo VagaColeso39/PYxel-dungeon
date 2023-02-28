@@ -61,9 +61,7 @@ class Item(pygame.sprite.Sprite):
             return self.cursed
 
     def use(self, level: object, enemies: list, player: object, camera: object) -> None:
-        print('try to use')
         if self.effect is not None:
-            print('used')
             if self.effect == 'blinding':
                 for enemy in enemies:
                     if enemy.visible:
@@ -168,7 +166,6 @@ def item_generator(drop_cost: int, categories: tuple = ('weapons', 'armor', 'pot
     if items_to_choose:
         item = random.choices(items_to_choose, weights=[item[1]['drop_cost'] for item in items_to_choose], k=1)
     else:
-        print('failed to choose item, restarting function')
         return item_generator(drop_cost, categories)
     if random.random() <= item[0][1]['drop_chance']:
         if category == 'weapons':

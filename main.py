@@ -1,5 +1,7 @@
 import random
 import sys
+import json
+import datetime
 
 import pygame
 
@@ -12,8 +14,7 @@ from utils.sounds import *
 from items import item_giver
 from inventory import Inventory, HUDChoose
 from text_painting import num_painting
-import json
-import datetime
+
 
 pygame.init()
 layers = pygame.sprite.LayeredUpdates()
@@ -62,7 +63,6 @@ def save_record():
     json_file = list(sorted(json_file, key=lambda x: -x['score']))[:5]
     with open('records.json', 'w') as file:
         file.write(json.dumps(json_file))
-    print('saved')
 
 
 def game_intro():
@@ -294,7 +294,7 @@ def start_game():
                     x = (mouse_pos[0] + camera.tl_x) // block_size
                     y = (mouse_pos[1] + camera.tl_y) // block_size
                     if not item_use_hud.item.throw(level, level.all_enemies, player, level.dungeon.grid[x][y]):
-                        print('you cant throw it there', x, y)
+                        pass
                     else:
                         camera.move_to(*player.pos)
                         for enemy in level.all_enemies:
@@ -312,7 +312,6 @@ def start_game():
                         elif y <= 63:
                             item_use_hud.item.drop(player, level.dungeon.grid)
                         elif y <= 95:
-                            print('throw')
                             inventory.close_bag()
                             throwing_flag = True
                 elif inventory.opened:
@@ -359,7 +358,6 @@ def start_game():
         pygame.display.update()
 
         if player.hp <= 0:
-            print(f"GAME OVER, score {player.score}")
             game_over()
             return
 
